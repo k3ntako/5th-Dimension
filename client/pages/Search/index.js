@@ -5,7 +5,7 @@ import { IoMdBook } from "react-icons/io";
 import styles from './index.css';
 
 
-export default class Home extends Component {
+export default class Search extends Component {
 
   constructor(props){
     super(props);
@@ -22,7 +22,7 @@ export default class Home extends Component {
 
   componentDidMount(){
     // TODO: remove
-    this.state.bookSearch.search("Javascript");
+    this.state.bookSearch.search("123");
   }
 
   onChange = (event) => {

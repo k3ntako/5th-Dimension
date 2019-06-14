@@ -1,8 +1,8 @@
-.search h1{
+.search h1 {
   text-align: center;
 }
 
-.searchForm{
+.searchForm {
   width: 100%;
   max-width: 900px;
   margin: auto;
@@ -14,23 +14,23 @@
   border: 1px solid rgba(0,0,0,0.2);
 }
 
-.searchBar, .searchButton{
+.searchBar, .searchButton {
   border-width: 0px;
   outline: none;
 }
 
-.searchBar{
+.searchBar {
   flex: 1;
   font-size: 1.5rem;
   padding: 0.5rem 1rem;
   height: 2rem;
 }
 
-.searchButton{
+.searchButton {
   width: 80px;
   background-color: #bbdefb;
   color: gray;
 }
-.searchButton:hover{
+.searchButton:hover {
   background-color: #42a5f5;
 }

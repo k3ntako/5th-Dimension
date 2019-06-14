@@ -1,0 +1,30 @@
+.results {
+  display: grid;
+  grid-row-gap: 1rem;
+  margin: 3rem auto;
+  grid-template-rows: repeat(10, 160px);
+  max-width: 900px;
+}
+
+.coverImage {
+  float: left;
+  width: 160px;
+  min-height: 160px;
+}
+.coverImage img {
+  max-height: 160px;
+  max-width: 160px;
+}
+
+.bookInfo {
+  padding-left: 3rem;
+  text-align: left;
+}
+.bookInfo > h4 {
+  padding-bottom: 0;
+}
+.bookInfo > h5 {
+  padding-top: 0;
+  color: gray;
+  font-weight: 700;
+}

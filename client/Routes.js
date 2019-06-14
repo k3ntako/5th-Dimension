@@ -1,12 +1,14 @@
 import React from 'react';
 import { Route, Switch, Redirect } from "react-router-dom";
 
-import HomePage from "./pages/Home";
+import SearchPage from "./pages/Search";
+import BookDetailsPage from "./pages/BookDetails";
 
 
 export default (props) => {
   return <Switch>
-    <Route key="root" path="/"     exact render={() => <Redirect to="/home"/> }/>
-    <Route key="home" path="/home" exact component={HomePage} />
+    <Route key="root" path="/"             exact render={() => <Redirect to="/search"/> }/>
+    <Route key="search" path="/search"     exact component={SearchPage} />
+    <Route key="details" path="/books/:id" exact component={BookDetailsPage} />
   </Switch>
 }

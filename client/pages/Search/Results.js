@@ -10,22 +10,25 @@ export default (props) => {
 
   let booksHTML;
   booksHTML = books.map(book => {
-    let imageLink = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : "";
+    const imageLink = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : "";
+    const authors = book.volumeInfo.authors && <span>By {book.volumeInfo.authors.join(", ")}</span>;
 
-    return <div key={book.id} className={styles.book}>
-      <div>
-        <a href={book.volumeInfo.canonicalVolumeLink} target='_blank'>
+
+
+    return <div key={book.id}>
+      <div className={styles.coverImage}>
+        <Link to={`/books/${book.id}`}>
           <img src={imageLink || ""} />
-        </a>
+        </Link>
       </div>
       <div className={styles.bookInfo}>
         <h4>
-          <a href={book.volumeInfo.canonicalVolumeLink} target='_blank'>
+          <Link to={`/books/${book.id}`}>
             {book.volumeInfo.title}
-          </a>
+          </Link>
         </h4>
-        <p className={styles.subtitle || ''}>{book.volumeInfo.subtitle}</p>
-        <p>By {book.volumeInfo.authors.join(", ")}</p>
+        <h5>{book.volumeInfo.subtitle || ''}</h5>
+        { authors }
       </div>
     </div>
   });

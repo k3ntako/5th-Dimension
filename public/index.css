@@ -13,9 +13,11 @@ section.page{
 }
 
 
-h1, h2, h3, h4{
+h1, h2, h3, h4, h5, h6{
   font-weight: 700;
   margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  text-overflow: ellipsis;
 }
 h1{
   font-size: 3rem;
@@ -31,6 +33,14 @@ h3{
 }
 h4{
   font-size: 1.5rem;
+  padding: 0.75rem 0;
+}
+h5{
+  font-size: 1rem;
+  padding: 0.75rem 0;
+}
+h6{
+  font-size: 0.75rem;
   padding: 0.75rem 0;
 }
 
