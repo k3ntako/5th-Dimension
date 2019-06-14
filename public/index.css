@@ -1,0 +1,54 @@
+html, body{
+  padding: 0;
+  margin: 0;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+section.page{
+  max-width: 1140px;
+  padding: 0 2rem;
+  margin: auto;
+}
+
+
+h1, h2, h3, h4{
+  font-weight: 700;
+  margin: 0;
+}
+h1{
+  font-size: 3rem;
+  padding: 2rem 0;
+}
+h2{
+  font-size: 2.5rem;
+  padding: 1.5rem 0;
+}
+h3{
+  font-size: 2rem;
+  padding: 1.25rem 0;
+}
+h4{
+  font-size: 1.5rem;
+  padding: 0.75rem 0;
+}
+
+h1.websiteName{
+  font-family: 'Overlock SC', cursive;
+  font-weight: 400;
+}
+
+input{
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 300;
+}
+
+a{
+  color: #1e88e5;
+  text-decoration: none;
+}
+a:hover{
+  color: #0d47a1;
+  text-decoration: none;
+}

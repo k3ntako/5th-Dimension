@@ -1,0 +1,26 @@
+.results{
+  display: grid;
+  grid-row-gap: 1rem;
+  margin: 3rem 0;
+  grid-template-rows: repeat(10, 160px);
+}
+
+.book{
+  display: flex;
+}
+
+.bookInfo{
+  flex: 1;
+  padding-left: 3rem;
+  text-align: left;
+}
+
+.bookInfo > h4{
+  padding-bottom: 0;
+}
+.subtitle{
+  display: block;
+  margin-top: 0;
+  color: gray;
+  font-weight: 700;
+}
