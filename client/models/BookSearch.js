@@ -25,32 +25,45 @@ class BookSearch {
     return this._totalItems;
   }
 
-  search( searchString ){
+  get lastPage(){
+    return Math.ceil(this._totalItems / MAX_RESULTS);
+  }
+
+  search = async ( searchString ) => {
     this._results = {};
     const searchStringArr = searchString.split(' ');
     this._searchString = searchStringArr.join("+");
 
-    return this.fetchPage( 0 );
+    await this.fetchPage( 0 );
+    await this.fetchPage( 1 );
+  }
+
+  alreadyFetched( pageNum ){
+    return !!this._results[pageNum];
   }
 
   fetchNextPage(){
-    this.fetchPage( this._currentPage + 1 );
+    if( !this.alreadyFetched(this._currentPage + 1) && this._currentPage + 1 <= this.lastPage ){
+      this.fetchPage( this._currentPage + 1 );
+    }
   }
 
-  fetchPage( pageNum ){
-    const url = GOOGLE_BOOKS_URL_BASE + `volumes?startIndex=${pageNum * 10}&q=${this._searchString}` + API_KEY_URL;
+  fetchPage = async( pageNum ) => {
+    if( !this.alreadyFetched(pageNum) ){
+      const url = GOOGLE_BOOKS_URL_BASE + `volumes?startIndex=${pageNum * MAX_RESULTS}&q=${this._searchString}` + API_KEY_URL;
 
-    return fetch(url).then(response => response.json()).then(books => {
-      if( books && books.items && books.items.length ){
-        this._totalItems = books.totalItems;
-        this._results[pageNum] =  books.items;
-      }
+      await fetch(url).then(response => response.json()).then(books => {
+        if( books && books.items && books.items.length ){
+          this._totalItems = books.totalItems;
+          this._results[pageNum] =  books.items;
+        }
+      });
+    }
 
-      return this.updateComponent();
-    });
+    this.updateComponent();
   }
 
-  getNextPage(){
+  goToNextPage(){
     this._currentPage++;
 
     if( !this._results[this._currentPage] ){
@@ -60,12 +73,13 @@ class BookSearch {
     }
   }
 
-  getPrevPage(){
+  goToPrevPage(){
     this._currentPage--;
   }
 
-  getPage( pageNum ){
+  goToPage( pageNum ){
     this._currentPage = pageNum;
+    this.fetchPage( pageNum );
   }
 
   updateComponent(){
