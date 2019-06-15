@@ -49,5 +49,5 @@ app.use(function (err, req, res, next){
 
 // START SERVER
 app.listen( process.env.PORT || 4000, function() {
-  console.log(`Server started at port ${4000}`);
+  console.log(`Server started at port ${ process.env.PORT || 4000 }`);
 });
