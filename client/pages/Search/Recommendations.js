@@ -21,18 +21,38 @@ export default class Recommendations extends Component {
   }
 
   async componentDidMount(){
-    const responseJSON = await fetch(NYT_LINK).then(response => response.json());
-    const isbns = responseJSON.results.books.map(book => book.isbns[0].isbn13).slice(0,12);
+    try{
+      const responseJSON = await fetch(NYT_LINK).then(response => response.json());
+      const isbns = responseJSON.results.books.map(book => book.isbns[0].isbn13).slice(0,12);
 
-    const promises = isbns.map(async (isbn) => {
-      return await fetch(googleByISBN(isbn)).then(response => response.json());
-    });
-    const resolvedPromises = await Promise.all(promises);
-    const books = resolvedPromises.reduce((allBooks, book) => allBooks.concat(book.items), [])
+      const promises = await isbns.map(async (isbn) => {
+        const response = await fetch(googleByISBN(isbn));
 
-    this.setState({
-      bestSellers: books
-    })
+        if( response.ok ){
+          return await response.json();
+        }else{
+          let error = await response.json();
+          console.error(error.error);
+          return null;
+        }
+      });
+
+      const resolvedPromises = await Promise.all(promises);
+
+      const books = resolvedPromises.reduce((allBooks, book) => {
+        if( book ){
+          return allBooks.concat(book.items);
+        }else{
+          return allBooks;
+        }
+      }, [])
+
+      this.setState({
+        bestSellers: books
+      })
+    }catch( err ){
+      console.log(err);
+    }
   }
 
 
@@ -41,9 +61,8 @@ export default class Recommendations extends Component {
       return null;
     }
 
-    return <section className="page">
-      <h3>New York Times Best Sellers: Fiction</h3>
-      <Results books={this.state.bestSellers} />
-    </section>
+    return <div>
+      <Results books={this.state.bestSellers} title="New York Times Best Sellers: Fiction" />
+    </div>
   }
 }

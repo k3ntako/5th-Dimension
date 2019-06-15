@@ -1,14 +1,31 @@
-.results {
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+.header > .buttons {
+  display: flex;
+}
+
+.resultsGrid {
   display: grid;
   grid-row-gap: 1rem;
-  margin: 3rem auto;
-  grid-template-rows: repeat(10, 160px);
+  grid-column-gap: 1rem;
+}
+.resultsGrid.list {
+  grid-template-columns: 1fr;
+}
+.resultsGrid.table {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.resultBox {
+  box-shadow: 0 0 5px 0px rgba(0,0,0,0.2);
+  background-color: white;
+  padding: 1rem;
 }
 
 .coverImage {
   float: left;
-  width: 160px;
-  min-height: 160px;
+  margin-right: 1rem;
 }
 .coverImage img {
   max-height: 160px;
@@ -19,11 +36,14 @@
   padding-left: 3rem;
   text-align: left;
 }
-.bookInfo > h4 {
-  padding-bottom: 0;
-}
 .bookInfo > h5 {
+  padding: 0;
+}
+.bookInfo > h6 {
   padding-top: 0;
   color: gray;
   font-weight: 700;
+}
+.bookInfo > span {
+  font-size: 0.75rem;
 }

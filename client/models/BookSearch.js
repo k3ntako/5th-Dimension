@@ -1,6 +1,6 @@
 const GOOGLE_BOOKS_URL_BASE = "https://www.googleapis.com/books/v1/";
 const GOOGLE_API_KEY = "&key=" + process.env.GOOGLE_BOOKS_API_KEY;
-const MAX_RESULTS = 10; //Google's default
+const MAX_RESULTS = 12;
 
 class BookSearch {
 
@@ -30,16 +30,26 @@ class BookSearch {
   }
 
   search = async ( searchString, page = 0 ) => {
-    this._results = {};
-    const searchStringArr = searchString.split(' ');
-    this._searchString = searchStringArr.join("+");
+    try{
+      this._results = {};
 
-    this._totalItems = 0;
+      if( !searchString ){
+        console.log(searchString)
+        return;
+      }
 
-    this._currentPage = Number(page);
+      const searchStringArr = searchString.split(' ');
+      this._searchString = searchStringArr.join("+");
 
-    await this.fetchPage( this._currentPage );
-    await this.fetchPage( this._currentPage + 1 );
+      this._totalItems = 0;
+
+      this._currentPage = Number(page);
+
+      await this.fetchPage( this._currentPage );
+      await this.fetchPage( this._currentPage + 1 );
+    }catch( err ){
+      console.log(err);
+    }
   }
 
   alreadyFetched( pageNum ){
@@ -53,18 +63,22 @@ class BookSearch {
   }
 
   fetchPage = async( pageNum ) => {
-    if( !this.alreadyFetched(pageNum) ){
-      const url = GOOGLE_BOOKS_URL_BASE + `volumes?startIndex=${pageNum * MAX_RESULTS}&q=${this._searchString}` + GOOGLE_API_KEY;
+    try{
+      if( !this.alreadyFetched(pageNum) ){
+        const url = GOOGLE_BOOKS_URL_BASE + `volumes?maxResults=${MAX_RESULTS}&startIndex=${pageNum * MAX_RESULTS}&q=${this._searchString}` + GOOGLE_API_KEY;
 
-      await fetch(url).then(response => response.json()).then(books => {
-        if( books && books.items && books.items.length ){
-          this._totalItems = books.totalItems;
-          this._results[pageNum] =  books.items;
-        }
-      });
+        await fetch(url).then(response => response.json()).then(books => {
+          if( books && books.items && books.items.length ){
+            this._totalItems = books.totalItems;
+            this._results[pageNum] =  books.items;
+          }
+        });
+      }
+
+      this.updateComponent();
+    }catch( err ){
+      console.log(err);
     }
-
-    this.updateComponent();
   }
 
   onPageChange( pageNum ){

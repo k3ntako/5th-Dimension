@@ -32,32 +32,38 @@ class Search extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot){
-    const parsed = qs.parse(this.props.location.search.slice(1));
+    try{
+      const parsed = qs.parse(this.props.location.search.slice(1));
 
-    if( parsed.q !== prevState.search.q ){
-      let newBookSearch = new BookSearch;
-      newBookSearch.updateComponent = () => this.forceUpdate();
+      if( parsed.q !== prevState.search.q ){
+        let newBookSearch = new BookSearch;
+        newBookSearch.updateComponent = () => this.forceUpdate();
 
-      await this.setState({ search: parsed, bookSearch: newBookSearch });
-      this.state.bookSearch.search(parsed.q, parsed.p);
+        await this.setState({ search: parsed, bookSearch: newBookSearch });
+        this.state.bookSearch.search(parsed.q, parsed.p);
 
-    }else if( parsed.p !== prevState.search.p ){
-      this.setState({ search: parsed });
-      this.state.bookSearch.onPageChange( parsed.p );
+      }else if( parsed.p !== prevState.search.p ){
+        this.setState({ search: parsed });
+        this.state.bookSearch.onPageChange( parsed.p );
+      }
+    }catch( err ){
+      console.log(err);
     }
   }
 
   render(){
     const bookSearch = this.state.bookSearch;
 
-    let recommendations;
-    if( !this.state.search.q ){
+    let recommendations, title;
+    if( this.state.search.q ){
+      title = `Results for: ${this.state.search.q}`
+      recommendations = <Results books={bookSearch.results[`${bookSearch.currentPage}`]} title={title} />
+    }else{
       recommendations = <Recommendations />
     }
 
     return <section className="page">
       { recommendations }
-      <Results books={bookSearch.results[`${bookSearch.currentPage}`]} />
       <PageNavigation bookSearch={bookSearch} />
     </section>
   }
