@@ -12,31 +12,16 @@ class PageNavigation extends Component {
     super(props);
 
     this.state = {
-      // goToPage: 1,
     };
   }
 
   nextPage = () => {
-    // this.props.bookSearch.goToNextPage();
     const parsed = qs.parse(this.props.location.search.slice(1));
 
     this.props.history.push(`/search?q=${parsed.q}&p=${Number(parsed.p) + 1}`)
   }
 
-  // goToPageOnChange = (event) => {
-  //   let numberStr = event.target.value;
-  //   numberStr = numberStr.replace( "\D", "" );
-  //   const number = Number(numberStr);
-  //
-  //   if( numberStr === "" ){
-  //     return this.setState({ goToPage: "" })
-  //   }else if( number && number > 0 && number <= this.props.bookSearch.lastPage ){
-  //     this.setState({ goToPage: number});
-  //   }
-  // }
-
   prevPage = () => {
-    // this.props.bookSearch.goToPrevPage();
     const parsed = qs.parse(this.props.location.search.slice(1));
     const newCurrentPage = parsed.p > 0 ? parsed.p - 1 : 0;
     this.props.history.push(`/search?q=${parsed.q}&p=${newCurrentPage}`)
@@ -63,12 +48,3 @@ class PageNavigation extends Component {
 }
 
 export default withRouter(PageNavigation);
-
-
-// totalItems is not consistent/reliable.
-// <p>Results: {this.props.bookSearch.totalItems} Books ({this.props.bookSearch.lastPage} Pages)</p>
-//<input
-  // value={this.state.goToPage}
-  // onChange={this.goToPageOnChange}
-  // type="number" min="1" max={this.props.bookSearch.lastPage}
-  // onKeyPress={this.listenForEnter} />

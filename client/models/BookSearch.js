@@ -2,7 +2,6 @@ const GOOGLE_BOOKS_URL_BASE = "https://www.googleapis.com/books/v1/";
 const API_KEY_URL = "&key=AIzaSyCWI8uVnnhCHXsZxT_CyKarpPYYr6b-a7s";
 const MAX_RESULTS = 10; //Google's default
 
-
 class BookSearch {
 
   constructor(props){
