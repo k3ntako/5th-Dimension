@@ -13,8 +13,6 @@ export default (props) => {
     const imageLink = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : "";
     const authors = book.volumeInfo.authors && <span>By {book.volumeInfo.authors.join(", ")}</span>;
 
-
-
     return <div key={book.id}>
       <div className={styles.coverImage}>
         <Link to={`/books/${book.id}`}>

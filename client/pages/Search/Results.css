@@ -3,7 +3,6 @@
   grid-row-gap: 1rem;
   margin: 3rem auto;
   grid-template-rows: repeat(10, 160px);
-  max-width: 900px;
 }
 
 .coverImage {

@@ -10,6 +10,7 @@ class BookSearch {
     this._searchString = "";
     this._totalItems = 0;
     this._currentPage = 0;
+    this._isFetching = false;
     this.fetchNextPage = this.fetchNextPage.bind(this);
   }
 
@@ -29,13 +30,17 @@ class BookSearch {
     return Math.ceil(this._totalItems / MAX_RESULTS);
   }
 
-  search = async ( searchString ) => {
+  search = async ( searchString, page = 0 ) => {
     this._results = {};
     const searchStringArr = searchString.split(' ');
     this._searchString = searchStringArr.join("+");
 
-    await this.fetchPage( 0 );
-    await this.fetchPage( 1 );
+    this._totalItems = 0;
+
+    this._currentPage = Number(page);
+
+    await this.fetchPage( this._currentPage );
+    await this.fetchPage( this._currentPage + 1 );
   }
 
   alreadyFetched( pageNum ){
@@ -63,25 +68,16 @@ class BookSearch {
     this.updateComponent();
   }
 
-  goToNextPage(){
-    this._currentPage++;
+  onPageChange( pageNum ){
+    this._currentPage = Number(pageNum);
 
     if( !this._results[this._currentPage] ){
       this.fetchPage(this._currentPage);
     }else if(!this._results[this._currentPage + 1]){
       this.fetchPage(this._currentPage + 1);
+    }else{
+      this.updateComponent();
     }
-  }
-
-  goToPrevPage(){
-    if( this._currentPage > 0 ){
-      this._currentPage--;
-    }
-  }
-
-  goToPage( pageNum ){
-    this._currentPage = pageNum;
-    this.fetchPage( pageNum );
   }
 
   updateComponent(){
