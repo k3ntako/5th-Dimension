@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
+const Dotenv = require('dotenv-webpack');
 
 var BUILD_DIR = path.resolve(__dirname, 'public');
 var APP_DIR = path.resolve(__dirname, 'client');
@@ -38,6 +39,9 @@ var config = {
       },
     ]
   },
+	plugins: [
+    new Dotenv()
+  ],
   watchOptions: {
     ignored: /node_modules/
   },

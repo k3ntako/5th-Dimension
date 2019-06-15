@@ -1,5 +1,5 @@
 const GOOGLE_BOOKS_URL_BASE = "https://www.googleapis.com/books/v1/";
-const API_KEY_URL = "&key=AIzaSyCWI8uVnnhCHXsZxT_CyKarpPYYr6b-a7s";
+const GOOGLE_API_KEY = "&key=" + process.env.GOOGLE_BOOKS_API_KEY;
 const MAX_RESULTS = 10; //Google's default
 
 class BookSearch {
@@ -54,7 +54,7 @@ class BookSearch {
 
   fetchPage = async( pageNum ) => {
     if( !this.alreadyFetched(pageNum) ){
-      const url = GOOGLE_BOOKS_URL_BASE + `volumes?startIndex=${pageNum * MAX_RESULTS}&q=${this._searchString}` + API_KEY_URL;
+      const url = GOOGLE_BOOKS_URL_BASE + `volumes?startIndex=${pageNum * MAX_RESULTS}&q=${this._searchString}` + GOOGLE_API_KEY;
 
       await fetch(url).then(response => response.json()).then(books => {
         if( books && books.items && books.items.length ){
@@ -80,6 +80,7 @@ class BookSearch {
   }
 
   updateComponent(){
+    // This function is set by the React component.
     console.log("Nothing here");
   }
 

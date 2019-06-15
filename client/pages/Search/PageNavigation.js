@@ -4,7 +4,7 @@ import qs from 'qs';
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
-import styles from './index.css'
+import styles from './index.css';
 
 class PageNavigation extends Component {
 
@@ -26,7 +26,6 @@ class PageNavigation extends Component {
     const newCurrentPage = parsed.p > 0 ? parsed.p - 1 : 0;
     this.props.history.push(`/search?q=${parsed.q}&p=${newCurrentPage}`)
   }
-
 
   render(){
     if( !this.props.bookSearch.totalItems ){

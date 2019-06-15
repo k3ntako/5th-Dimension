@@ -5,6 +5,7 @@ import { IoMdBook } from "react-icons/io";
 
 import BookSearch from '../../models/BookSearch';
 import Results from './Results';
+import Recommendations from './Recommendations';
 import PageNavigation from './PageNavigation';
 import styles from './index.css';
 
@@ -25,7 +26,6 @@ class Search extends Component {
   }
 
   componentDidMount(){
-    // TODO: remove
     if( this.state.search.q ){
       this.state.bookSearch.search(this.state.search.q, this.state.search.p || 0);
     }
@@ -50,7 +50,13 @@ class Search extends Component {
   render(){
     const bookSearch = this.state.bookSearch;
 
+    let recommendations;
+    if( !this.state.search.q ){
+      recommendations = <Recommendations />
+    }
+
     return <section className="page">
+      { recommendations }
       <Results books={bookSearch.results[`${bookSearch.currentPage}`]} />
       <PageNavigation bookSearch={bookSearch} />
     </section>
