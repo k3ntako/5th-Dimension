@@ -40,7 +40,9 @@ var config = {
     ]
   },
 	plugins: [
-    new Dotenv()
+    new Dotenv({
+			path: path.resolve(__dirname, '..', '.env'),
+    })
   ],
   watchOptions: {
     ignored: /node_modules/
