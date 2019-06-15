@@ -3,10 +3,11 @@ import Results from './Results';
 
 import styles from './index.css';
 
-const NYT_API_KEY = process.env.NYT_API;
+const NYT_API_KEY = "75CdDT9ccCYUBlFNTOLtYE1AwAMpdEFV";
+console.log(NYT_API_KEY);
 const NYT_LINK = `https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=${NYT_API_KEY}`;
 
-const GOOGLE_API_KEY = "&key=" + process.env.GOOGLE_BOOKS_API_KEY;
+const GOOGLE_API_KEY = "&key=" + "AIzaSyCiP-gK-4paqp4nt-E8xWZFjTST-2o8E8w";
 const googleByISBN = (isbn) => `https://www.googleapis.com/books/v1/volumes?maxResults=1&q=ISBN:${isbn}${GOOGLE_API_KEY}`;
 
 

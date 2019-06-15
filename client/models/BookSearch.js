@@ -1,5 +1,5 @@
 const GOOGLE_BOOKS_URL_BASE = "https://www.googleapis.com/books/v1/";
-const GOOGLE_API_KEY = "&key=" + process.env.GOOGLE_BOOKS_API_KEY;
+const GOOGLE_API_KEY = "&key=" + "AIzaSyCiP-gK-4paqp4nt-E8xWZFjTST-2o8E8w";
 const MAX_RESULTS = 12;
 
 class BookSearch {
