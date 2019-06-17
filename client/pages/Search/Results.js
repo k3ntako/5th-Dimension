@@ -26,18 +26,18 @@ export default (props) => {
     return <div key={book.id} className={styles.resultBox}>
       <div className={styles.coverImage}>
         <Link to={`/books/${book.id}`}>
-          <img src={imageLink || ""} />
+          <img src={ imageLink || "" } />
         </Link>
       </div>
       <div className={styles.bookInfo}>
         <h5>
           <Link to={`/books/${book.id}`}>
-            {book.volumeInfo.title}
+            { book.volumeInfo.title }
           </Link>
         </h5>
         { book.volumeInfo.subtitle && <h6>{book.volumeInfo.subtitle}</h6> }
         { authors }
-        {publisher}
+        { publisher }
       </div>
     </div>
   });

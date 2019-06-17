@@ -4,14 +4,20 @@
 }
 
 .nav {
-  position: relative;
   display: flex;
+  align-content: space-between;
   max-width: 1200px;
   margin: auto;
 }
+.nav a {
+  color: white;
+}
 
-.nav h3 {
-  text-align: center;
+.titleAndSearch {
+  flex: 1;
+  display: flex;
+}
+.titleAndSearch h3 {
   color: white;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -24,18 +30,20 @@
   display: none;
 }
 
-.settings {
+.buttons {
+  display: flex;
+}
+.buttons > div {
   height: 100%;
-  position: absolute;
-  right: 0;
   display: flex;
   align-items: center;
   color: white;
+  padding: 0 0.5rem;
 }
-.settings > svg {
+.buttons svg {
   cursor: pointer;
 }
-.settings > svg:hover {
+.buttons svg:hover {
   color: #999;
 }
 
