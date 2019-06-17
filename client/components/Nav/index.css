@@ -1,18 +1,52 @@
-.nav{
+.navWrapper {
   width: 100%;
-  background-color: #0d47a1;
-  padding-bottom: 3rem;
+  background-color: #005d90;
 }
 
-.nav h1 {
+.nav {
+  position: relative;
+  display: flex;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.nav h3 {
   text-align: center;
-  padding-bottom: 0;
+  color: white;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  float: left;
+  height: 70px;
+  box-sizing: border-box;
+}
+
+.mobile {
+  display: none;
+}
+
+.settings {
+  height: 100%;
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
   color: white;
 }
-.nav h3 {
-  padding-top: 0;
-  text-align: center;
-  color: #aaa;
-  font-family: 'Overlock SC', cursive;
-  font-weight: 400;
+.settings > svg {
+  cursor: pointer;
+}
+.settings > svg:hover {
+  color: #999;
+}
+
+
+@media screen and (max-width: 600px){
+
+  .desktop{
+    display:  none;
+  }
+  .mobile{
+    display: block;
+  }
+
 }

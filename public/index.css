@@ -5,11 +5,14 @@ html, body{
   font-size: 16px;
   font-weight: 300;
   background-color: #e0e0e0;
+  overflow-x: hidden;
 }
 
 #app{
   position: relative;
   min-height: 100vh;
+  padding-bottom: 4rem; /* size of footer */
+  box-sizing: border-box;
 }
 
 section.page{
@@ -25,19 +28,19 @@ h1, h2, h3, h4, h5, h6{
   text-overflow: ellipsis;
 }
 h1{
-  font-size: 3rem;
+  font-size: 2.5rem;
   padding: 2rem 0;
 }
 h2{
-  font-size: 2.5rem;
+  font-size: 2rem;
   padding: 1.5rem 0;
 }
 h3{
-  font-size: 2rem;
+  font-size: 1.5rem;
   padding: 1.25rem 0;
 }
 h4{
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   padding: 0.75rem 0;
 }
 h5{
@@ -49,7 +52,7 @@ h6{
   padding: 0.75rem 0;
 }
 
-h1.websiteName{
+.websiteName{
   font-family: 'Overlock SC', cursive;
   font-weight: 400;
 }
@@ -66,4 +69,13 @@ a{
 a:hover{
   color: #0d47a1;
   text-decoration: none;
+}
+
+@media screen and (max-width: 750px){
+
+  section.page{
+    padding: 0 0.5rem 1rem 0.5rem;
+    margin: auto;
+  }
+
 }

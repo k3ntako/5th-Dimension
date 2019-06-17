@@ -15,7 +15,7 @@ export default (props) => {
 
   let booksHTML;
   booksHTML = books.map(book => {
-    if( !book || book.volumeInfo ){
+    if( !book || !book.volumeInfo ){
       return null;
     }
 
