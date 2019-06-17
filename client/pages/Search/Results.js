@@ -20,7 +20,8 @@ export default (props) => {
     }
 
     const imageLink = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : "";
-    const authors = book.volumeInfo.authors && <span>By {book.volumeInfo.authors.join(", ")}</span>;
+    const authors = book.volumeInfo.authors && <p>By {book.volumeInfo.authors.join(", ")}</p>;
+    const publisher = book.volumeInfo.publisher && <p>Publisher: {book.volumeInfo.publisher}</p>;
 
     return <div key={book.id} className={styles.resultBox}>
       <div className={styles.coverImage}>
@@ -34,8 +35,9 @@ export default (props) => {
             {book.volumeInfo.title}
           </Link>
         </h5>
-        { book.volumeInfo.subtitle && <h6>{book.volumeInfo.subtitle || ''}</h6> }
+        { book.volumeInfo.subtitle && <h6>{book.volumeInfo.subtitle}</h6> }
         { authors }
+        {publisher}
       </div>
     </div>
   });
@@ -45,10 +47,8 @@ export default (props) => {
 
   return <div>
     <div className={styles.header}>
-      <h3>{props.title}</h3>
-      <div className={styles.buttons}>
-        <button onClick={() => setIsTable(!isTable)}>{icon}</button>
-      </div>
+      <h4>{props.title}</h4>
+      <button onClick={() => setIsTable(!isTable)}>{icon}</button>
     </div>
     <div className={`${styles.resultsGrid} ${gridClassName}`}>
       {booksHTML}

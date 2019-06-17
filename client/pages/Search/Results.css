@@ -2,8 +2,10 @@
   display: flex;
   justify-content: space-between;
 }
-.header > .buttons {
-  display: flex;
+.header > button {
+  background-color: rgba(0,0,0,0);
+  border-width: 0;
+  outline: none;
 }
 
 .resultsGrid {
@@ -44,6 +46,27 @@
   color: gray;
   font-weight: 700;
 }
-.bookInfo > span {
+.bookInfo > p {
   font-size: 0.75rem;
+}
+
+
+@media screen and (max-width: 1100px){
+
+  .resultsGrid.table {
+    grid-template-columns: 1fr 1fr;
+  }
+
+}
+
+@media screen and (max-width: 750px){
+
+  .resultsGrid.table {
+    grid-template-columns: 1fr;
+  }
+
+  .header > .buttons {
+    display: none;
+  }
+
 }

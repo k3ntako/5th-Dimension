@@ -39,15 +39,40 @@ export default class BookDetails extends Component {
     const sanitizedDescription = DOMPurify.sanitize(volumeInfo.description, DOMPurifyOptions);
     const imageLink = volumeInfo.imageLinks && volumeInfo.imageLinks.small;
 
+    const identifiers = volumeInfo.industryIdentifiers.map(identifier => {
+      return <div key={identifier.type + identifier.identifier}>
+        <strong>{identifier.type.replace(/\_/g, " ")}</strong>: {identifier.identifier}
+      </div>
+    })
+
+    let publishedDateHTML;
+    if( volumeInfo.publishedDate && typeof volumeInfo.publishedDate === 'string' ){
+      const dateSplit = volumeInfo.publishedDate.split("-")
+      const publishedDate = new Date(Date.UTC(dateSplit[0], dateSplit[1], [2], 12));
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      publishedDateHTML = <div>
+        <strong>Published</strong>: {publishedDate.toLocaleDateString('en-US', options)}
+      </div>
+    }
+
     return <section className="page">
-      <h1 className={styles.title}>{volumeInfo.title}</h1>
+      <h2 className={styles.title}>{volumeInfo.title}</h2>
       <h4 className={styles.subtitle}>{volumeInfo.subtitle || ''}</h4>
       <div className={styles.details}>
-        <div className={styles.left}>
-          <img className={styles.coverImage} src={imageLink} />
+        <img className={styles.coverImage} src={imageLink} />
+        <div className={styles.info}>
+          <div><strong>Publisher</strong>: {volumeInfo.publisher}</div>
+          { publishedDateHTML }
+          <div><strong>Page Count</strong>: {volumeInfo.pageCount} pages</div>
+          { identifiers }
+          <div>
+            <p>
+              <a href={volumeInfo.previewLink}>More at Google Books</a>
+            </p>
+          </div>
         </div>
-        <div className={styles.right}>
-          <div dangerouslySetInnerHTML={{__html: sanitizedDescription}} />
+        <div className={styles.description}
+          dangerouslySetInnerHTML={{__html: sanitizedDescription}}>
         </div>
       </div>
     </section>
