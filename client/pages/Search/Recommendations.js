@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
+import GoogleIcon from './../../components/GoogleIcon';
 import Results from './Results';
 
-import styles from './index.css';
+import styles from './Recommendations.css';
 
 const NYT_API_KEY = "75CdDT9ccCYUBlFNTOLtYE1AwAMpdEFV";
 const NYT_LINK = `https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=${NYT_API_KEY}`;
@@ -23,7 +24,7 @@ export default class Recommendations extends Component {
   async componentDidMount(){
     try{
       const responseJSON = await fetch(NYT_LINK).then(response => response.json());
-      const isbns = responseJSON.results.books.map(book => book.isbns[0].isbn13).slice(0,12);
+      const isbns = responseJSON.results.books.map(book => book.isbns[0].isbn13).slice(0,6);
 
       const promises = await isbns.map(async (isbn) => {
         const response = await fetch(googleByISBN(isbn));
@@ -63,6 +64,7 @@ export default class Recommendations extends Component {
 
     return <div>
       <Results books={this.state.bestSellers} title="New York Times Best Sellers: Fiction" />
+      <GoogleIcon className={styles.google}/>
     </div>
   }
 }

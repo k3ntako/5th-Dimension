@@ -3,8 +3,9 @@ import { withRouter } from 'react-router-dom';
 import qs from 'qs';
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import GoogleIcon from './../../components/GoogleIcon';
 
-import styles from './index.css';
+import styles from './PageNavigation.css';
 
 class PageNavigation extends Component {
 
@@ -32,15 +33,24 @@ class PageNavigation extends Component {
       return null;
     }
 
-    return <div className={styles.pageNavigation}>
-      { this.props.bookSearch.currentPage > 0 && <button className={`${styles.button} ${styles.prev}`} onClick={this.prevPage}>
-        <IoMdArrowRoundBack size={"1.7rem"} />
+    let prevButton;
+
+    if( this.props.bookSearch.currentPage > 0 ){
+      prevButton = <button className={`${styles.button} ${styles.prev}`} onClick={this.prevPage}>
+        <IoMdArrowRoundBack size={"1.4rem"} />
         <span>Back</span>
-      </button> }
-      <button className={`${styles.button} ${styles.next}`} onClick={this.nextPage}>
-        <span>Next</span>
-        <IoMdArrowRoundForward size={"1.7rem"} />
-      </button>
+      </button>;
+    }
+
+    return <div className={styles.pageNavigation}>
+      <div>{ prevButton }</div>
+      <GoogleIcon className={styles.google}/>
+      <div>
+        <button className={`${styles.button} ${styles.next}`} onClick={this.nextPage}>
+          <span>Next</span>
+          <IoMdArrowRoundForward size={"1.4rem"} />
+        </button>
+      </div>
     </div>
   }
 

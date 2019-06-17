@@ -7,7 +7,6 @@ import BookSearch from '../../models/BookSearch';
 import Results from './Results';
 import Recommendations from './Recommendations';
 import PageNavigation from './PageNavigation';
-import styles from './index.css';
 
 
 class Search extends Component {
