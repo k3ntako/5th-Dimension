@@ -1,3 +1,5 @@
+import AbortableFetchGoogle from './AbortableFetchGoogle';
+
 const GOOGLE_BOOKS_URL_BASE = "https://www.googleapis.com/books/v1/";
 const GOOGLE_API_KEY = "&key=" + "AIzaSyCiP-gK-4paqp4nt-E8xWZFjTST-2o8E8w";
 const MAX_RESULTS = 12;
@@ -34,7 +36,7 @@ class BookSearch {
       this._results = {};
 
       if( !searchString ){
-        console.log(searchString);
+        console.log("Invalid search: ", searchString);
         return;
       }
 
@@ -67,15 +69,14 @@ class BookSearch {
       if( typeof pageNum === 'number' && !Number.isNaN(pageNum) && !this.alreadyFetched(pageNum) ){
         const url = GOOGLE_BOOKS_URL_BASE + `volumes?maxResults=${MAX_RESULTS}&startIndex=${pageNum * MAX_RESULTS}&q=${this._searchString}` + GOOGLE_API_KEY;
 
-        await fetch(url).then(response => response.json()).then(books => {
-          if( books && books.items && books.items.length ){
-            this._totalItems = books.totalItems;
-            this._results[pageNum] =  books.items;
-          }
-        });
+        const newFetch = new AbortableFetchGoogle;
+        this._results[pageNum] = newFetch;
+        await newFetch.fetch( url );
+        if( newFetch._fetchSucessful ){
+          this._totalItems = newFetch.response.totalItems;
+          this.updateComponent();
+        }
       }
-
-      this.updateComponent();
     }catch( err ){
       console.log(err);
     }
@@ -96,6 +97,12 @@ class BookSearch {
   updateComponent(){
     // This function is set by the React component.
     console.log("Nothing here");
+  }
+
+  abort(){
+    for (let idx in this._results){
+      this._results[idx].abort();
+    }
   }
 
 }

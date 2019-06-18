@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import GoogleIcon from './../../components/GoogleIcon';
 import Results from './Results';
+import AbortableFetch from './../../models/AbortableFetch';
+import AbortableFetchGoogle from './../../models/AbortableFetchGoogle';
 
 import styles from './Recommendations.css';
 
@@ -19,40 +21,47 @@ export default class Recommendations extends Component {
     this.state = {
       bestSellers: []
     };
+
+    this.fetches = [];
   }
 
   async componentDidMount(){
     try{
-      const responseJSON = await fetch(NYT_LINK).then(response => response.json());
-      const isbns = responseJSON.results.books.map(book => book.isbns[0].isbn13).slice(0,6);
+      const nytFetch = new AbortableFetch();
+      this.fetches.push( nytFetch );
+      await nytFetch.fetch(NYT_LINK);
 
-      const promises = await isbns.map(async (isbn) => {
-        const response = await fetch(googleByISBN(isbn));
+      if( !nytFetch.fetchSucessful ){
+        return null;
+      }
 
-        if( response.ok ){
-          return await response.json();
-        }else{
-          let error = await response.json();
-          console.error(error.error);
-          return null;
-        }
+      const isbns = nytFetch.response.results.books.map(book => book.isbns[0].isbn13).slice(0,6);
+
+      const fetchPromises = isbns.map(async (isbn) => {
+        const newFetch = new AbortableFetchGoogle();
+        this.fetches.push( newFetch );
+        await newFetch.fetch(googleByISBN(isbn));
+        return newFetch;
       });
 
-      const resolvedPromises = await Promise.all(promises);
+      let fetches = await Promise.all(fetchPromises);
 
-      const books = resolvedPromises.reduce((allBooks, book) => {
-        if( book ){
-          return allBooks.concat(book.items);
-        }else{
-          return allBooks;
-        }
-      }, [])
 
-      this.setState({
-        bestSellers: books
-      })
+      const aborted = fetches.some(fetch => !fetch.fetchSucessful);
+
+      if( !aborted ){
+        this.setState({
+          bestSellers: fetches
+        });
+      }
     }catch( err ){
       console.log(err);
+    }
+  }
+
+  componentWillUnmount(){
+    for (let idx in this.fetches){
+      this.fetches[idx].abort();
     }
   }
 
@@ -62,8 +71,10 @@ export default class Recommendations extends Component {
       return null;
     }
 
+    const books = this.state.bestSellers.map(book => book.first);
+
     return <div>
-      <Results books={this.state.bestSellers} title="New York Times Best Sellers: Fiction" />
+      <Results books={books} title="New York Times Best Sellers: Fiction" />
       <GoogleIcon className={styles.google}/>
     </div>
   }

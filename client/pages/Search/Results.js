@@ -10,11 +10,10 @@ export default (props) => {
 
   const books = props.books;
   if( !books || !books.length ){
-    return <h3>No Results</h3>;
+    return <h4>Searching...</h4>;
   }
 
-  let booksHTML;
-  booksHTML = books.map(book => {
+  let booksHTML = books.map(book => {
     if( !book || !book.volumeInfo ){
       return null;
     }

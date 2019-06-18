@@ -50,19 +50,25 @@ class Search extends Component {
     }
   }
 
+  componentWillUnmount(){
+    this.state.bookSearch.abort();
+  }
+
   render(){
     const bookSearch = this.state.bookSearch;
 
-    let recommendations, title;
-    if( this.state.search.q ){
+    let results, title;
+    if( this.state.search.q && bookSearch.results ){
       title = `Results for: ${this.state.search.q}`
-      recommendations = <Results books={bookSearch.results[`${bookSearch.currentPage}`]} title={title} />
+      let bookFetches = bookSearch.results[`${bookSearch.currentPage}`];
+      let books = bookFetches && bookSearch.results[`${bookSearch.currentPage}`].all;
+      results = <Results books={books} title={title} />
     }else{
-      recommendations = <Recommendations />
+      results = <Recommendations />
     }
 
     return <section className="page">
-      { recommendations }
+      { results }
       <PageNavigation bookSearch={bookSearch} />
     </section>
   }

@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import styles from './index.css';
 import DOMPurify from 'dompurify';
 
+import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
+
 const DOMPurifyOptions = {
   ALLOWED_TAGS: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'ul', 'ol', 'li',
   'b', 'i', 'u', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div', 'sup', 'sub',
@@ -14,27 +16,40 @@ export default class BookDetails extends Component {
     super(props);
 
     this.state = {
-      book: null
+      bookFetch: null
     };
 
+    this.fetch = null;
   }
 
-  componentDidMount(){
-    fetch(`https://www.googleapis.com/books/v1/volumes/${this.props.match.params.id}`).
-      then(response => response.json()).
-      then(book => {
-        this.setState({ book });
-      })
+  async componentDidMount(){
+    const bookFetch = new AbortableFetchGoogle;
+    this.fetch = bookFetch;
+    const link = `https://www.googleapis.com/books/v1/volumes/${this.props.match.params.id}`;
+    await bookFetch.fetch( link );
+
+    if( bookFetch.fetchSucessful ){
+      this.setState({ bookFetch: bookFetch });
+    }
+  }
+
+  componentWillUnmount(){
+    this.fetch.abort();
   }
 
   render(){
-    const { book } = this.state;
+    const { bookFetch } = this.state;
 
-    if( !book ){
+    if( !bookFetch ){
       return null;
     }
 
+    const book = bookFetch.first;
     const { volumeInfo } = book;
+
+    if (!volumeInfo) {
+      return null
+    }
 
     const sanitizedDescription = DOMPurify.sanitize(volumeInfo.description, DOMPurifyOptions);
     const imageLink = volumeInfo.imageLinks && volumeInfo.imageLinks.small;
