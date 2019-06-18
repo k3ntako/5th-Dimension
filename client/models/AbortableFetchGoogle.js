@@ -20,11 +20,11 @@ class AbortableFetchGoogle extends AbortableFetch{
   }
 
   get all(){
-    if( !this._fetchSucessful || this._isFetching ){
+    if( !this._fetchSucessful || this._isFetching || !this._response ){
       return null;
     }
 
-    if( this._response && this._response.items ){
+    if( this._response.items ){
       return this._response.items;
     }
   }

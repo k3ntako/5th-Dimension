@@ -29,7 +29,7 @@ export default class Recommendations extends Component {
     try{
       const nytFetch = new AbortableFetch();
       this.fetches.push( nytFetch );
-      await nytFetch.fetch(NYT_LINK);
+      await nytFetch.aFetch(NYT_LINK);
 
       if( !nytFetch.fetchSucessful ){
         return null;
@@ -40,7 +40,7 @@ export default class Recommendations extends Component {
       const fetchPromises = isbns.map(async (isbn) => {
         const newFetch = new AbortableFetchGoogle();
         this.fetches.push( newFetch );
-        await newFetch.fetch(googleByISBN(isbn));
+        await newFetch.aFetch(googleByISBN(isbn));
         return newFetch;
       });
 

@@ -11,7 +11,6 @@ class BookSearch {
     this._searchString = "";
     this._totalItems = 0;
     this._currentPage = 0;
-    this._isFetching = false;
     this.fetchNextPage = this.fetchNextPage.bind(this);
   }
 
@@ -71,7 +70,7 @@ class BookSearch {
 
         const newFetch = new AbortableFetchGoogle;
         this._results[pageNum] = newFetch;
-        await newFetch.fetch( url );
+        await newFetch.aFetch( url );
         if( newFetch._fetchSucessful ){
           this._totalItems = newFetch.response.totalItems;
           this.updateComponent();

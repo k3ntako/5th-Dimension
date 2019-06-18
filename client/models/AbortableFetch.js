@@ -19,7 +19,7 @@ class AbortableFetch {
     return this._fetchSucessful;
   }
 
-  async fetch( url ){
+  async aFetch( url ){
     try{
       this._isFetching = true;
 

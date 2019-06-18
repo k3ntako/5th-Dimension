@@ -26,7 +26,7 @@ export default class BookDetails extends Component {
     const bookFetch = new AbortableFetchGoogle;
     this.fetch = bookFetch;
     const link = `https://www.googleapis.com/books/v1/volumes/${this.props.match.params.id}`;
-    await bookFetch.fetch( link );
+    await bookFetch.aFetch( link );
 
     if( bookFetch.fetchSucessful ){
       this.setState({ bookFetch: bookFetch });
