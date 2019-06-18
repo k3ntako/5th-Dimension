@@ -34,7 +34,7 @@ class BookSearch {
       this._results = {};
 
       if( !searchString ){
-        console.log(searchString)
+        console.log(searchString);
         return;
       }
 
@@ -64,7 +64,7 @@ class BookSearch {
 
   fetchPage = async( pageNum ) => {
     try{
-      if( !this.alreadyFetched(pageNum) ){
+      if( typeof pageNum === 'number' && !Number.isNaN(pageNum) && !this.alreadyFetched(pageNum) ){
         const url = GOOGLE_BOOKS_URL_BASE + `volumes?maxResults=${MAX_RESULTS}&startIndex=${pageNum * MAX_RESULTS}&q=${this._searchString}` + GOOGLE_API_KEY;
 
         await fetch(url).then(response => response.json()).then(books => {

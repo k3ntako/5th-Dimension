@@ -4,13 +4,9 @@ html, body{
   font-family: 'Ubuntu', sans-serif;
   font-size: 16px;
   font-weight: 300;
-  background-color: #fffaf0;
+  background-color: var(--bg-color);
   overflow-x: hidden;
-}
-
-#app{
-  position: relative;
-  min-height: 100vh;
+  color: var(--text-color);
 }
 
 section.page{
@@ -61,11 +57,11 @@ input{
 }
 
 a{
-  color: #1e88e5;
+  color: var(--link-color);
   text-decoration: none;
 }
 a:hover{
-  color: #0d47a1;
+  color: var(--link-hover-color);
   text-decoration: none;
 }
 
@@ -76,4 +72,21 @@ a:hover{
     margin: auto;
   }
 
+}
+
+/* Color Variables */
+body {
+  --bg-color: #fffaf0;
+  --text-color: black;
+  --link-color: #1e88e5;
+  --link-hover-color: #0d47a1;
+  --card-bg-color: #ffffff;
+}
+
+body[dark-mode='on'] {
+  --bg-color: #04121E;
+  --text-color: white;
+  --link-color: #1e88e5;
+  --link-hover-color: #0d47a1;
+  --card-bg-color: #292C2F;
 }

@@ -25,7 +25,7 @@ export default (props) => {
     </p>
     <h4>Name: 5th Dimension</h4>
     <p>
-      NOTE: This contains spoilers about the movie, Interstellar (2014)
+      NOTE: This contains spoilers about the movie, Interstellar (2014).
     </p>
     <p>
       The name is a reference to a scene in the movie, Interstellar, a movie

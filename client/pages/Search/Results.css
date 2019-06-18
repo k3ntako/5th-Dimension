@@ -6,6 +6,7 @@
   background-color: rgba(0,0,0,0);
   border-width: 0;
   outline: none;
+  color: var(--text-color);
 }
 
 .resultsGrid {
@@ -21,7 +22,7 @@
 }
 .resultBox {
   box-shadow: 0 0 5px 0px rgba(0,0,0,0.2);
-  background-color: white;
+  background-color: var(--card-bg-color);
   padding: 1rem;
 }
 

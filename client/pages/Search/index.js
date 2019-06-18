@@ -34,7 +34,7 @@ class Search extends Component {
     try{
       const parsed = qs.parse(this.props.location.search.slice(1));
 
-      if( parsed.q !== prevState.search.q ){
+      if( parsed.q && parsed.q !== prevState.search.q ){
         let newBookSearch = new BookSearch;
         newBookSearch.updateComponent = () => this.forceUpdate();
 
