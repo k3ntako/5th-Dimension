@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { IoMdBook } from "react-icons/io";
 import styles from './index.css';
@@ -12,71 +12,89 @@ const options = {
   isbn: "ISBN",
 }
 
+class BookSearchBar extends Component {
+  constructor(props){
+    super(props);
 
-const BookSearchBar = (props) => {
-  const [search, setSearch] = useState("");
-  const [hasFocus, setHasFocus] = useState(false);
-  const [activeType, setActiveType] = useState("all");
-  const textInput = React.createRef();
+    this.state = {
+      search: "",
+      hasFocus: false,
+      activeType: "all"
+    };
+    this.textInput = React.createRef();
+  }
 
-  // Acts as componentDidMount
-  useEffect(() => {
+  componentDidMount(){
+    // Clicking outside of search bar will cause search bar to lose focus
     document.addEventListener("click", (event) => {
       const searchForm = document.getElementsByClassName(styles.searchForm)[0];
 
       if( !searchForm.contains(event.target) ){
-        setHasFocus(false);
+        this.setState({ hasFocus: false });
       }
     });
-  }, []);
+  }
 
-  const onSubmit = () => {
-    setHasFocus(false);
-     textInput.current.blur();
+  onSubmit = () => {
+    this.setState({ hasFocus: false });
+    this.textInput.current.blur();
 
+    const { activeType, search } = this.state;
     let query = search.trim().replace(/\s+/g, "+");
     query = activeType === 'all' ? query : `${activeType}:${query}`;
 
     if( !query ){
-      props.history.push('/search');
+      this.props.history.push('/search');
     }else{
-      props.history.push(`/search?q=${query}&p=0`);
+      this.props.history.push(`/search?q=${query}&p=0`);
     }
 
   }
 
-  const listenForEnter = (event) => {
+  listenForEnter = (event) => {
     if(event.key == 'Enter'){
-      onSubmit();
+      this.onSubmit();
     }
   }
 
-  const hasTextClassName = !!search.length ? styles.hasText : "";
-  const hasFocusClassName = hasFocus ? styles.hasFocus : "";
-
-  let buttons = [];
-  for ( let type in options ){
-    const activeClassName = type === activeType ? styles.activeButton : '';
-
-    buttons.push(
-      <button key={type} className={activeClassName} onClick={(event) => {
-          event.preventDefault();
-          setActiveType(type);
-        }}>
-        {options[type]}
-      </button>
-    );
+  onSearchChange = (event) => {
+    const searchString = event.target.value;
+    this.setState({ search: searchString })
   }
 
-  return <div className={`${styles.searchForm} ${hasFocusClassName}`}>
-    <input ref={textInput}
-      className={`${styles.searchBar} ${hasTextClassName} ${hasFocusClassName}`}
-      value={search}
-      onChange={(e) => setSearch(e.target.value)}
-      onFocus={() => setHasFocus(true)}
-      onKeyPress={listenForEnter} />
-    <div className={`${styles.buttons} ${hasFocusClassName}`}>{ buttons }</div>
-  </div>
+  onTypeChange(type){
+    event.preventDefault();
+    this.setState({ activeType: type })
+  }
+
+  render(){
+    const { activeType, search, hasFocus } = this.state;
+
+    const hasTextClassName = !!search.length ? styles.hasText : "";
+    const hasFocusClassName = hasFocus ? styles.hasFocus : "";
+
+    let buttons = [];
+    for ( let type in options ){
+      const activeClassName = type === activeType ? styles.activeButton : '';
+
+      buttons.push(
+        <button key={type} className={activeClassName} onClick={() => this.onTypeChange(type)}>
+          {options[type]}
+        </button>
+      );
+    }
+
+    return <div className={`${styles.searchForm} ${hasFocusClassName}`}>
+      <input ref={this.textInput}
+        className={`${styles.searchBar} ${hasTextClassName} ${hasFocusClassName}`}
+        value={search}
+        onChange={this.onSearchChange}
+        onFocus={() => this.setState({ hasFocus: true})}
+        onKeyPress={this.listenForEnter} />
+      <div className={`${styles.buttons} ${hasFocusClassName}`}>{ buttons }</div>
+    </div>
+  }
 }
+
 
 export default withRouter(BookSearchBar);
