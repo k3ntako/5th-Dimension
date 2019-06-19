@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import BookSearchBar from './../BookSearchBar';
-import Modal from './../Modal';
 import { FaMoon } from "react-icons/fa";
 import { FaSun } from "react-icons/fa";
 import { MdInfo } from "react-icons/md";
