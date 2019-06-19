@@ -16,6 +16,8 @@
 .titleAndSearch {
   flex: 1;
   display: flex;
+  overflow-y: visible;
+  max-height: 70px;
 }
 .titleAndSearch h3 {
   color: white;

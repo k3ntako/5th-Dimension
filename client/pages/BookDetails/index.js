@@ -70,6 +70,10 @@ export default class BookDetails extends Component {
       </div>
     }
 
+    const categoryTitle = volumeInfo.categories.length < 1 ? "Category" : "Categories";
+    const categories = volumeInfo.categories.join(", ")
+
+
     return <section className="page">
       <h2 className={styles.title}>{volumeInfo.title}</h2>
       <h4 className={styles.subtitle}>{volumeInfo.subtitle || ''}</h4>
@@ -80,6 +84,7 @@ export default class BookDetails extends Component {
           { publishedDateHTML }
           <div><strong>Page Count</strong>: {volumeInfo.pageCount} pages</div>
           { identifiers }
+          <div><strong>{categoryTitle}</strong>: {categories}</div>
           <div>
             <p>
               <a href={volumeInfo.previewLink}>More at Google Books</a>

@@ -8,6 +8,13 @@ import Results from './Results';
 import Recommendations from './Recommendations';
 import PageNavigation from './PageNavigation';
 
+const options = {
+  intitle: "title",
+  inauthor: "author",
+  inpublisher: "publisher",
+  subject: "category",
+  isbn: "ISBN",
+}
 
 class Search extends Component {
 
@@ -59,7 +66,13 @@ class Search extends Component {
 
     let results, title;
     if( this.state.search.q && bookSearch.results ){
-      title = `Results for: ${this.state.search.q}`
+      let query = this.state.search.q;
+      for( let type in options ){
+        const regex = new RegExp(`${type}:`, "g");
+        query = query.replace(regex, options[type] + ": ");
+      }
+
+      title = `Search for ${query}`;
       let bookFetches = bookSearch.results[`${bookSearch.currentPage}`];
       let books = bookFetches && bookSearch.results[`${bookSearch.currentPage}`].all;
       results = <Results books={books} title={title} />

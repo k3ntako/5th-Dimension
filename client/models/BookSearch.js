@@ -39,8 +39,7 @@ class BookSearch {
         return;
       }
 
-      const searchStringArr = searchString.split(' ');
-      this._searchString = searchStringArr.join("+");
+      this._searchString = searchString.replace(/\s+/g, "+");
 
       this._totalItems = 0;
 

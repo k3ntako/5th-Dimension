@@ -1,40 +1,79 @@
 .searchForm {
   flex: 1;
+  flex-direction: column;
   max-width: 600px;
-  margin: auto 1rem auto 0;
+  margin: 18px 1rem auto 0;
   text-align: center;
   display: flex;
-  border-radius: 30px;
+  border-radius: 5px;
   box-shadow: 0 0 5px 0px rgba(0,0,0,0.2);
   overflow: hidden;
-  border: 1px solid rgba(0,0,0,0.2);
-}
-
-.searchBar, .searchButton {
-  border-width: 0px;
-  outline: none;
+  background-color: white;
+  z-index: 100;
 }
 
 .searchBar {
-  flex: 1;
+  border-width: 0px;
+  outline: none;
   font-size: 1rem;
   padding: 0.25rem 1rem;
   height: 1.5rem;
   background: url("https://developers.google.com/books/images/google_watermark.gif") no-repeat white;
   background-position: 1rem center;
 }
-.searchBar.hasText {
+.searchBar.hasText, .searchBar:focus {
   background: white;
 }
 
-.searchButton {
-  width: 80px;
-  background-color: #bbdefb;
-  color: gray;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.buttons {
+  display: none;
 }
-.searchButton:hover {
-  background-color: #42a5f5;
+.buttons.hasFocus {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 3rem;
+}
+.buttons > button {
+  font-size: 1rem;
+  border: none;
+  border-top: 2px solid rgba(0,0,0,0.2);
+  border-right: 2px solid rgba(0,0,0,0.2);
+  outline: none;
+}
+.buttons > button:last-child {
+  border-right: none;
+}
+.buttons > button:hover {
+  background-color: #ccdee8;
+  cursor: pointer;
+}
+.buttons > .activeButton, .buttons > .activeButton:hover {
+  background-color: #005d90;
+  color: white;
+  cursor: default;
+}
+
+@media screen and (min-width: 401px) and (max-width: 600px){
+
+  .buttons.hasFocus {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 3rem 3rem;
+  }
+  .buttons > button:nth-child(3n) {
+    border-right: none;
+  }
+
+}
+
+@media screen and (max-width: 400px){
+
+  .buttons.hasFocus {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 3rem 3rem 3rem;
+  }
+  .buttons > button:nth-child(2n) {
+    border-right: none;
+  }
+
 }
