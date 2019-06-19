@@ -39,22 +39,26 @@ class Search extends Component {
     }
   }
 
-  async componentDidUpdate(prevProps, prevState, snapshot){
+  componentDidUpdate(prevProps, prevState, snapshot){
     try{
       const parsed = qs.parse(this.props.location.search.slice(1));
+      const oldParsed = qs.parse(prevProps.location.search.slice(1));
 
-      if( parsed.q && parsed.q !== prevState.search.q ){
+      if( parsed.q && (!oldParsed.q || oldParsed.q !== parsed.q)){
+        //Search Term Changed or New Search
         let newBookSearch = new BookSearch;
         newBookSearch.updateComponent = () => this.forceUpdate();
 
-        await this.setState({ search: parsed, bookSearch: newBookSearch });
-        this.state.bookSearch.search(parsed.q, parsed.p);
-
-      }else if( parsed.p !== prevState.search.p ){
+        this.setState({ search: parsed, bookSearch: newBookSearch }, () => {
+          this.state.bookSearch.search(parsed.q, parsed.p);
+        });
+      }else if( parsed && oldParsed && oldParsed.q === parsed.q && false  ){
+        //Page changed on same search
         this.setState({ search: parsed });
         this.state.bookSearch.onPageChange( parsed.p );
       }else if( !parsed.q && this.state.bookSearch.totalItems ){
-        this.setState({ bookSearch: new BookSearch });
+        // Going to homepage but old state is still around
+        this.setState({ bookSearch: new BookSearch, search: {} });
       }
     }catch( err ){
       console.log(err);
@@ -79,7 +83,7 @@ class Search extends Component {
       title = `Search for ${query}`;
       let bookFetches = bookSearch.results[`${bookSearch.currentPage}`];
       let books = bookFetches && bookSearch.results[`${bookSearch.currentPage}`].all;
-      results = <Results books={books} title={title} />
+      results = <Results books={books} title={title} noResults={bookSearch.noResults} />
     }else{
       results = <>
         <h1 className={`websiteName ${styles.title}`}>5th Dimension</h1>

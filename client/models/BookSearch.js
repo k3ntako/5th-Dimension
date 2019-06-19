@@ -1,6 +1,6 @@
 import AbortableFetchGoogle from './AbortableFetchGoogle';
 
-const FIELDS = "&fields=items(id,volumeInfo(authors,imageLinks(thumbnail),publisher,title))";
+const FIELDS = "&fields=totalItems,items(id,volumeInfo(authors,imageLinks(thumbnail),publisher,title))";
 const MAX_RESULTS = 12;
 const GOOGLE_API_KEY = "&key=" + "AIzaSyCiP-gK-4paqp4nt-E8xWZFjTST-2o8E8w";
 const GOOGLE_BOOKS_URL_BASE = `https://www.googleapis.com/books/v1/volumes?maxResults=${MAX_RESULTS}&${FIELDS}`;
@@ -10,7 +10,7 @@ class BookSearch {
   constructor(props){
     this._results = {};
     this._searchString = "";
-    this._totalItems = 0;
+    this._totalItems = null;
     this._currentPage = 0;
     this.fetchNextPage = this.fetchNextPage.bind(this);
   }
@@ -31,6 +31,10 @@ class BookSearch {
     return Math.ceil(this._totalItems / MAX_RESULTS);
   }
 
+  get noResults(){
+    return this._totalItems < 1 && !!Object.keys(this._results).length;
+  }
+
   search = async ( searchString, page = 0 ) => {
     try{
       this._results = {};
@@ -47,7 +51,9 @@ class BookSearch {
       this._currentPage = Number(page);
 
       await this.fetchPage( this._currentPage );
-      await this.fetchPage( this._currentPage + 1 );
+      if( this._totalItems > 0 ){
+        await this.fetchPage( this._currentPage + 1 );
+      }
     }catch( err ){
       console.log(err);
     }

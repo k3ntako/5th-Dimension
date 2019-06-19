@@ -9,7 +9,9 @@ export default (props) => {
   const [isTable, setIsTable] = useState(true);
 
   const books = props.books;
-  if( !books || !books.length ){
+  if( props.noResults ){
+    return <h4>No Books Found</h4>;
+  }else if( !books || !books.length ){
     return <h4>Searching...</h4>;
   }
 
