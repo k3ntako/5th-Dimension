@@ -27,9 +27,15 @@ export default class Recommendations extends Component {
 
   async componentDidMount(){
     try{
+      let fourAM = new Date();
+      fourAM.setHours(4);
+      fourAM.setMinutes(0);
+      const fourAMTomorrow = fourAM.setDate(fourAM.getDate() + 1);
+      const fourAMNextWeek = fourAM.setDate(fourAM.getDate() + 6);
+
       const nytFetch = new AbortableFetch();
       this.fetches.push( nytFetch );
-      await nytFetch.aFetch(NYT_LINK);
+      await nytFetch.getCacheOrFetch(NYT_LINK, "combined-print-and-e-book-fiction", fourAMTomorrow);
 
       if( !nytFetch.fetchSucessful ){
         return null;
@@ -40,7 +46,7 @@ export default class Recommendations extends Component {
       const fetchPromises = isbns.map(async (isbn) => {
         const newFetch = new AbortableFetchGoogle();
         this.fetches.push( newFetch );
-        await newFetch.aFetch(googleByISBN(isbn));
+        await newFetch.getCacheOrFetch(googleByISBN(isbn), 'googleISBN' + isbn, fourAMNextWeek);
         return newFetch;
       });
 

@@ -71,7 +71,7 @@ class BookSearch {
         const newFetch = new AbortableFetchGoogle;
         this._results[pageNum] = newFetch;
         await newFetch.aFetch( url );
-        if( newFetch._fetchSucessful ){
+        if( newFetch.fetchSucessful ){
           this._totalItems = newFetch.response.totalItems;
           this.updateComponent();
         }
