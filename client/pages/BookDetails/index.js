@@ -48,24 +48,24 @@ export default class BookDetails extends Component {
     }
 
     const book = bookFetch.first;
-    const { volumeInfo } = book;
+    const vInfo = book.volumeInfo;
 
-    if (!volumeInfo) {
+    if (!vInfo) {
       return null
     }
 
-    const sanitizedDescription = DOMPurify.sanitize(volumeInfo.description, DOMPurifyOptions);
-    const imageLink = volumeInfo.imageLinks && volumeInfo.imageLinks.small;
+    const sanitizedDescription = DOMPurify.sanitize(vInfo.description, DOMPurifyOptions);
+    const imageLink = vInfo.imageLinks && vInfo.imageLinks.small;
 
-    const identifiers = volumeInfo.industryIdentifiers.map(identifier => {
+    const identifiers = vInfo.industryIdentifiers && vInfo.industryIdentifiers.map(identifier => {
       return <div key={identifier.type + identifier.identifier}>
         <strong>{identifier.type.replace(/\_/g, " ")}</strong>: {identifier.identifier}
       </div>
     })
 
     let publishedDateHTML;
-    if( volumeInfo.publishedDate && typeof volumeInfo.publishedDate === 'string' ){
-      const dateSplit = volumeInfo.publishedDate.split("-")
+    if( vInfo.publishedDate && typeof vInfo.publishedDate === 'string' ){
+      const dateSplit = vInfo.publishedDate.split("-")
       const publishedDate = new Date(Date.UTC(dateSplit[0], dateSplit[1], [2], 12));
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       publishedDateHTML = <div>
@@ -73,24 +73,27 @@ export default class BookDetails extends Component {
       </div>
     }
 
-    const categoryTitle = volumeInfo.categories.length < 1 ? "Category" : "Categories";
-    const categories = volumeInfo.categories.join(", ")
+    let categoryTitle, categories;
+    if( vInfo.categories ){
+      categoryTitle = vInfo.categories.length < 1 ? "Category" : "Categories";
+      const categories = vInfo.categories.join(", ");
+    }
 
 
     return <section className="page">
-      <h2 className={styles.title}>{volumeInfo.title}</h2>
-      <h4 className={styles.subtitle}>{volumeInfo.subtitle || ''}</h4>
+      <h2 className={styles.title}>{vInfo.title}</h2>
+      <h4 className={styles.subtitle}>{vInfo.subtitle || ''}</h4>
       <div className={styles.details}>
         <img className={styles.coverImage} src={imageLink} />
         <div className={styles.info}>
-          <div><strong>Publisher</strong>: {volumeInfo.publisher}</div>
+          <div><strong>Publisher</strong>: {vInfo.publisher}</div>
           { publishedDateHTML }
-          <div><strong>Page Count</strong>: {volumeInfo.pageCount} pages</div>
+          <div><strong>Page Count</strong>: {vInfo.pageCount} pages</div>
           { identifiers }
           <div><strong>{categoryTitle}</strong>: {categories}</div>
           <div>
             <p>
-              <a href={volumeInfo.previewLink} target="_blank">More at Google Books</a>
+              <a href={vInfo.previewLink} target="_blank">More at Google Books</a>
             </p>
           </div>
         </div>
