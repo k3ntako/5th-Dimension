@@ -31,7 +31,7 @@ export default (props) => {
       The name is a reference to a scene in the movie, Interstellar, a movie
       about a group of people looking for an alternative planet to live on.
       There is a scene where the main character communicates with his daughter
-      in the past using a bookshelf, tesseract, which is a tool to represent
+      in the past using a bookshelf, the Tesseract, which is a tool to represent
       the fifth dimension (past, present, future).
     </p>
     <p>

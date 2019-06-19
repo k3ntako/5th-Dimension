@@ -10,6 +10,9 @@ const DOMPurifyOptions = {
   'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'span', ],
 }
 
+const FIELDS = "fields=volumeInfo(authors,categories,description,industryIdentifiers," +
+  "imageLinks(small),pageCount,previewLink,publishedDate,publisher,title)";
+
 export default class BookDetails extends Component {
 
   constructor(props){
@@ -25,7 +28,7 @@ export default class BookDetails extends Component {
   async componentDidMount(){
     const bookFetch = new AbortableFetchGoogle;
     this.fetch = bookFetch;
-    const link = `https://www.googleapis.com/books/v1/volumes/${this.props.match.params.id}`;
+    const link = `https://www.googleapis.com/books/v1/volumes/${this.props.match.params.id}?${FIELDS}`;
     await bookFetch.aFetch( link );
 
     if( bookFetch.fetchSucessful ){
@@ -87,7 +90,7 @@ export default class BookDetails extends Component {
           <div><strong>{categoryTitle}</strong>: {categories}</div>
           <div>
             <p>
-              <a href={volumeInfo.previewLink}>More at Google Books</a>
+              <a href={volumeInfo.previewLink} target="_blank">More at Google Books</a>
             </p>
           </div>
         </div>

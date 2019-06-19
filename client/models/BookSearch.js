@@ -1,8 +1,9 @@
 import AbortableFetchGoogle from './AbortableFetchGoogle';
 
-const GOOGLE_BOOKS_URL_BASE = "https://www.googleapis.com/books/v1/";
-const GOOGLE_API_KEY = "&key=" + "AIzaSyCiP-gK-4paqp4nt-E8xWZFjTST-2o8E8w";
+const FIELDS = "&fields=items(id,volumeInfo(authors,imageLinks(thumbnail),publisher,title))";
 const MAX_RESULTS = 12;
+const GOOGLE_API_KEY = "&key=" + "AIzaSyCiP-gK-4paqp4nt-E8xWZFjTST-2o8E8w";
+const GOOGLE_BOOKS_URL_BASE = `https://www.googleapis.com/books/v1/volumes?maxResults=${MAX_RESULTS}&${FIELDS}`;
 
 class BookSearch {
 
@@ -65,7 +66,7 @@ class BookSearch {
   fetchPage = async( pageNum ) => {
     try{
       if( typeof pageNum === 'number' && !Number.isNaN(pageNum) && !this.alreadyFetched(pageNum) ){
-        const url = GOOGLE_BOOKS_URL_BASE + `volumes?maxResults=${MAX_RESULTS}&startIndex=${pageNum * MAX_RESULTS}&q=${this._searchString}` + GOOGLE_API_KEY;
+        const url = GOOGLE_BOOKS_URL_BASE + `&startIndex=${pageNum * MAX_RESULTS}&q=${this._searchString}` + GOOGLE_API_KEY;
 
         const newFetch = new AbortableFetchGoogle;
         this._results[pageNum] = newFetch;

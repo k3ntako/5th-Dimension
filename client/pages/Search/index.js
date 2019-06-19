@@ -8,6 +8,8 @@ import Results from './Results';
 import Recommendations from './Recommendations';
 import PageNavigation from './PageNavigation';
 
+import styles from './index.css'
+
 const options = {
   intitle: "title",
   inauthor: "author",
@@ -51,6 +53,8 @@ class Search extends Component {
       }else if( parsed.p !== prevState.search.p ){
         this.setState({ search: parsed });
         this.state.bookSearch.onPageChange( parsed.p );
+      }else if( !parsed.q && this.state.bookSearch.totalItems ){
+        this.setState({ bookSearch: new BookSearch });
       }
     }catch( err ){
       console.log(err);
@@ -77,7 +81,11 @@ class Search extends Component {
       let books = bookFetches && bookSearch.results[`${bookSearch.currentPage}`].all;
       results = <Results books={books} title={title} />
     }else{
-      results = <Recommendations />
+      results = <>
+        <h1 className={`websiteName ${styles.title}`}>5th Dimension</h1>
+        <h3 className={`websiteName ${styles.subtitle}`}>Book Search</h3>
+        <Recommendations />
+      </>
     }
 
     return <section className="page">

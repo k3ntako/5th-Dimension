@@ -1,0 +1,10 @@
+.title, .subtitle {
+  text-align: center;
+}
+.title {
+  padding-bottom: 0;
+}
+.subtitle {
+  padding-top: 0;
+  color: gray;
+}
