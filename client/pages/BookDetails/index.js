@@ -26,13 +26,17 @@ export default class BookDetails extends Component {
   }
 
   async componentDidMount(){
-    const bookFetch = new AbortableFetchGoogle;
-    this.fetch = bookFetch;
-    const link = `https://www.googleapis.com/books/v1/volumes/${this.props.match.params.id}?${FIELDS}`;
-    await bookFetch.aFetch( link );
+    try{
+      const bookFetch = new AbortableFetchGoogle;
+      this.fetch = bookFetch;
+      const link = `https://www.googleapis.com/books/v1/volumes/${this.props.match.params.id}?${FIELDS}`;
+      await bookFetch.aFetch( link );
 
-    if( bookFetch.fetchSucessful ){
-      this.setState({ bookFetch: bookFetch });
+      if( bookFetch.fetchSucessful ){
+        this.setState({ bookFetch: bookFetch });
+      }
+    }catch( err ){
+      console.error(err);
     }
   }
 

@@ -29,13 +29,13 @@ class PageNavigation extends Component {
   }
 
   render(){
-    if( !this.props.bookSearch.totalItems ){
+    if( !this.props.totalItems ){
       return null;
     }
 
     let prevButton;
 
-    if( this.props.bookSearch.currentPage > 0 ){
+    if( this.props.currentPage > 0 ){
       prevButton = <button className={`${styles.button} ${styles.prev}`} onClick={this.prevPage}>
         <IoMdArrowRoundBack size={"1.4rem"} />
         <span>Back</span>
@@ -57,3 +57,11 @@ class PageNavigation extends Component {
 }
 
 export default withRouter(PageNavigation);
+
+// get lastPage(){
+//   return Math.ceil(this._totalItems / MAX_RESULTS);
+// }
+//
+// get noResults(){
+//   return this._totalItems < 1 && !!Object.keys(this._results).length;
+// }

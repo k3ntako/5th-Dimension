@@ -3,12 +3,15 @@ import { withRouter } from 'react-router-dom';
 import qs from 'qs';
 import { IoMdBook } from "react-icons/io";
 
-import BookSearch from '../../models/BookSearch';
+import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
 import Results from './Results';
-import Recommendations from './Recommendations';
 import PageNavigation from './PageNavigation';
+import Recommendations from './Recommendations';
 
-import styles from './index.css'
+const FIELDS = "&fields=totalItems,items(id,volumeInfo(authors,imageLinks(thumbnail),publisher,title))";
+const MAX_RESULTS = 12;
+const GOOGLE_API_KEY = "&key=" + "AIzaSyCiP-gK-4paqp4nt-E8xWZFjTST-2o8E8w";
+const GOOGLE_BOOKS_URL_BASE = `https://www.googleapis.com/books/v1/volumes?maxResults=${MAX_RESULTS}&${FIELDS}`;
 
 const options = {
   intitle: "title",
@@ -23,78 +26,144 @@ class Search extends Component {
   constructor(props){
     super(props);
 
-    const parsed = qs.parse(props.location.search.slice(1));
+    const parsed = this.parseQuery(props.location.search.slice(1));
 
     this.state = {
-      search: parsed || {},
-      bookSearch: new BookSearch,
+      searchString: parsed.q,
+      currentPage: parsed.p,
+      results: {},
+      totalItems : null,
+      fetchingCurrentPage: true,
     };
-
-    this.state.bookSearch.updateComponent = () => this.forceUpdate();
   }
 
   componentDidMount(){
-    if( this.state.search.q ){
-      this.state.bookSearch.search(this.state.search.q, this.state.search.p || 0);
+    if( this.state.searchString ){
+      this.setUpFetch(this.state.currentPage || 0)
     }
   }
 
+  setUpFetch( pageNum = 0 ){
+    const newFetch = new AbortableFetchGoogle;
+    const results = Object.assign({}, this.state.results, { [pageNum]: newFetch });
+    this.setState({
+      results,
+      fetchingCurrentPage: pageNum === this.state.currentPage
+    }, () => this.fetchSearch(pageNum));
+  }
+
+  async fetchSearch(pageNum){
+    try{
+      const { currentPage, results, searchString } = this.state;
+
+      const searchQuery = searchString.replace(/\s+/g, "+"); // replaces whitespace with "+"
+      const url = GOOGLE_BOOKS_URL_BASE + `&startIndex=${pageNum * MAX_RESULTS}&q=${searchQuery}` + GOOGLE_API_KEY;
+
+      const googleFetch = results[pageNum];
+      await googleFetch.aFetch( url );
+
+      if( googleFetch.fetchSucessful ){
+        this.setState({
+          totalItems: googleFetch.response.totalItems,
+          fetchingCurrentPage: false
+        });
+      }
+
+      if( !results[currentPage + 1] ){
+        this.setUpFetch( currentPage + 1 );
+      }
+    }catch( err ){
+      console.error(err);
+    }
+  }
+
+  alreadyFetched( pageNum ){
+    return !!this.state.results[pageNum];
+  }
+
+  onPageChange( pageNum ){
+    this.setState({
+      currentPage: pageNum
+    }, () => {
+      if( !this.alreadyFetched(pageNum) ){
+        this.setUpFetch( pageNum );
+      }else if(!this.alreadyFetched(pageNum + 1)){
+        this.setUpFetch( pageNum + 1 );
+      }
+    });
+  }
+
+
   componentDidUpdate(prevProps, prevState, snapshot){
     try{
-      const parsed = qs.parse(this.props.location.search.slice(1));
-      const oldParsed = qs.parse(prevProps.location.search.slice(1));
+      const parsed = this.parseQuery(this.props.location.search.slice(1));
+      const oldParsed = this.parseQuery(prevProps.location.search.slice(1));
 
       if( parsed.q && (!oldParsed.q || oldParsed.q !== parsed.q)){
         //Search Term Changed or New Search
-        let newBookSearch = new BookSearch;
-        newBookSearch.updateComponent = () => this.forceUpdate();
-
-        this.setState({ search: parsed, bookSearch: newBookSearch }, () => {
-          this.state.bookSearch.search(parsed.q, parsed.p);
+        this.setState({
+          searchString: parsed.q,
+          results: {},
+          totalItems : null,
+          currentPage: parsed.p || 0,
+        }, () => {
+          this.setUpFetch(parsed.p);
         });
-      }else if( parsed && oldParsed && oldParsed.q === parsed.q && false  ){
+      }else if( parsed && oldParsed && oldParsed.q === parsed.q && oldParsed.p !== parsed.p  ){
         //Page changed on same search
-        this.setState({ search: parsed });
-        this.state.bookSearch.onPageChange( parsed.p );
-      }else if( !parsed.q && this.state.bookSearch.totalItems ){
+        this.setState({ searchString: parsed.q, currentPage: parsed.p });
+        this.onPageChange( parsed.p );
+      }else if( !parsed.q && this.state.totalItems ){
         // Going to homepage but old state is still around
-        this.setState({ bookSearch: new BookSearch, search: {} });
+        this.setState({
+          searchString: "",
+          results: {},
+          totalItems: null,
+          currentPage: 0,
+        });
       }
     }catch( err ){
       console.log(err);
     }
   }
 
+  parseQuery( toParse ){
+    let parsed = qs.parse(toParse);
+    parsed.p = Number(parsed.p) || 0;
+    return parsed;
+  }
+
   componentWillUnmount(){
-    this.state.bookSearch.abort();
+    for (let pageNum in this.state.results){
+      this.state.results[pageNum].abort();
+    }
   }
 
   render(){
-    const bookSearch = this.state.bookSearch;
+    const { currentPage, fetchingCurrentPage, results, searchString, totalItems } = this.state;
+    // Homepage (user hasn't searched yet)
+    if( !searchString ){
+      return <section className="page">
+        <Recommendations />
+      </section>
+    }
 
-    let results, title;
-    if( this.state.search.q && bookSearch.results ){
-      let query = this.state.search.q;
+    let books, noResult, title;
+    if( results && results[currentPage] ){
+      let query = searchString;
       for( let type in options ){
         const regex = new RegExp(`${type}:`, "g");
         query = query.replace(regex, options[type] + ": ");
       }
-
       title = `Search for ${query}`;
-      let bookFetches = bookSearch.results[`${bookSearch.currentPage}`];
-      let books = bookFetches && bookSearch.results[`${bookSearch.currentPage}`].all;
-      results = <Results books={books} title={title} noResults={bookSearch.noResults} />
-    }else{
-      results = <>
-        <h1 className={`websiteName ${styles.title}`}>5th Dimension</h1>
-        <h3 className={`websiteName ${styles.subtitle}`}>Book Search</h3>
-        <Recommendations />
-      </>
+
+      noResult = totalItems < 1 && !!Object.keys(results).length && !fetchingCurrentPage;
+      books =  results[currentPage].all;
     }
 
     return <section className="page">
-      { results }
-      <PageNavigation bookSearch={bookSearch} />
+      <Results books={books} title={title} noResults={noResult} />
+      <PageNavigation totalItems={totalItems} currentPage={currentPage} />
     </section>
   }
 }

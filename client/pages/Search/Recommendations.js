@@ -44,10 +44,14 @@ export default class Recommendations extends Component {
       const isbns = nytFetch.response.results.books.map(book => book.isbns[0].isbn13).slice(0,6);
 
       const fetchPromises = isbns.map(async (isbn) => {
-        const newFetch = new AbortableFetchGoogle();
-        this.fetches.push( newFetch );
-        await newFetch.getCacheOrFetch(googleByISBN(isbn), 'googleISBN' + isbn, fourAMNextWeek);
-        return newFetch;
+        try{
+          const newFetch = new AbortableFetchGoogle();
+          this.fetches.push( newFetch );
+          await newFetch.getCacheOrFetch(googleByISBN(isbn), 'googleISBN' + isbn, fourAMNextWeek);
+          return newFetch;
+        }catch( err ){
+          console.error(err);
+        }
       });
 
       let fetches = await Promise.all(fetchPromises);
@@ -60,7 +64,7 @@ export default class Recommendations extends Component {
         });
       }
     }catch( err ){
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -77,11 +81,15 @@ export default class Recommendations extends Component {
     }
 
 
-    const books = this.state.bestSellers.map(book => book.first);
+    const books =  this.state.bestSellers.map(book => book.first);
 
-    return <div>
-      <Results books={books} title="New York Times Best Sellers: Fiction" />
-      <GoogleIcon className={styles.google}/>
-    </div>
+    return <>
+      <h1 className={`websiteName ${styles.title}`}>5th Dimension</h1>
+      <h3 className={`websiteName ${styles.subtitle}`}>Book Search</h3>
+      <div>
+        <Results books={books} title="New York Times Best Sellers: Fiction" />
+        <GoogleIcon className={styles.google}/>
+      </div>
+    </>
   }
 }
