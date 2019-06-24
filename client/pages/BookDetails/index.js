@@ -46,7 +46,6 @@ export default class BookDetails extends Component {
 
   render(){
     const { bookFetch } = this.state;
-
     if( !bookFetch ){
       return null;
     }
@@ -80,7 +79,7 @@ export default class BookDetails extends Component {
     let categoryTitle, categories;
     if( vInfo.categories ){
       categoryTitle = vInfo.categories.length < 1 ? "Category" : "Categories";
-      const categories = vInfo.categories.join(", ");
+      categories = vInfo.categories.join(", ");
     }
 
 

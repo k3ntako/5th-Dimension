@@ -1,7 +1,13 @@
 class AbortableFetch {
   constructor(){
-    this._controller = new AbortController();
-    this._signal = this._controller.signal;
+    try{
+      this._controller = new AbortController();
+      this._signal = this._controller.signal;
+    }catch(err){
+      console.log("AbortController not found");
+      this._controller = null;
+      this._signal = null;
+    }
     this._response = null;
     this._isFetching = false;
     this._fetchSucessful = null;
@@ -23,7 +29,8 @@ class AbortableFetch {
     try{
       this._isFetching = true;
 
-      const response = await fetch( url, { signal: this._signal } );
+      const init = this._signal ? { signal: this._signal } : {};
+      const response = await fetch( url, init );
 
       if( response.ok ){
         const json = await response.json();
@@ -98,7 +105,9 @@ class AbortableFetch {
 
 
   abort(){
-    if( this._isFetching ){
+    if( !this._controller && this._isFetching ){
+      console.log("No AbortController, could not abort fetch.");
+    }else if( this._isFetching ){
       this._controller.abort();
     }
   }
