@@ -1,5 +1,5 @@
 import React from 'react';
-const { shallow, mount, render } = require('enzyme');
+const { mount, render } = require('enzyme');
 import BookDetails from '../../pages/BookDetails';
 import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
 
@@ -7,11 +7,11 @@ const descriptionTitle = "The Year 2000";
 const descriptionOne = "This is a book about what I think the year 2000 will look like. I promise there will be flying horses.";
 const descriptionTwo = "I think you will enjoy this one!";
 
-describe('<BookDetails> component as member', () => {
+describe('<BookDetails> component with book info', () => {
   let wrapper, bookFetch, volumeInfo;
 
   beforeAll(() => {
-    const match = { params: { id: "Bob" }};
+    const match = { params: { id: "SHGJ23FD6" }};
 
     wrapper = mount(
       <BookDetails match={match}/>

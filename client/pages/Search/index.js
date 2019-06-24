@@ -158,7 +158,7 @@ class Search extends Component {
       title = `Search for ${query}`;
 
       noResult = totalItems < 1 && !!Object.keys(results).length && !fetchingCurrentPage;
-      books =  results[currentPage].all;
+      books = results[currentPage].all;
     }
 
     return <section className="page">

@@ -57,10 +57,11 @@ export default class Recommendations extends Component {
       let fetches = await Promise.all(fetchPromises);
 
       const aborted = fetches.some(fetch => !fetch.fetchSucessful);
-
+      const books = this.state.bestSellers.map(book => book.first);
       if( !aborted ){
+        const books = fetches.map(fetch => fetch.first);
         this.setState({
-          bestSellers: fetches
+          bestSellers: books
         });
       }
     }catch( err ){
@@ -74,20 +75,17 @@ export default class Recommendations extends Component {
     }
   }
 
-
   render(){
-    if( !this.state.bestSellers || !this.state.bestSellers.length ){
+    const bestSellers = this.state.bestSellers;
+    if( !bestSellers || !bestSellers.length ){
       return null;
     }
-
-
-    const books =  this.state.bestSellers.map(book => book.first);
 
     return <>
       <h1 className={`websiteName ${styles.title}`}>5th Dimension</h1>
       <h3 className={`websiteName ${styles.subtitle}`}>Book Search</h3>
       <div>
-        <Results books={books} title="New York Times Best Sellers: Fiction" />
+        <Results books={bestSellers} title="New York Times Best Sellers: Fiction" />
         <GoogleIcon className={styles.google}/>
       </div>
     </>
