@@ -1,15 +1,7 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
 const apiRoutes = require('./API/v1');
-
-// MongoDB Set-up
-mongoose.connection.once('open', function(){
-  console.log("MongoDB connected");
-});
-mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
-mongoose.connect("mongodb://localhost:27017/google-books");
 
 // Express Set-up
 const app = express();
