@@ -78,7 +78,7 @@ export default class BookDetails extends Component {
 
     let categoryTitle, categories;
     if( vInfo.categories ){
-      categoryTitle = vInfo.categories.length < 1 ? "Category" : "Categories";
+      categoryTitle = vInfo.categories.length < 2 ? "Category" : "Categories";
       categories = vInfo.categories.join(", ");
     }
 

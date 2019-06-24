@@ -7,7 +7,24 @@
     "start": "node server/index.js",
     "heroku-postbuild": "webpack -p",
     "dev": "concurrently --raw \"webpack --mode=development --watch\" \"NODE_ENV=development node server/index.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --no-cache"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "moduleDirectories": [
+      "node_modules"
+    ],
+    "moduleNameMapper": {
+      "\\.(css)$": "identity-obj-proxy"
+    },
+    "setupFilesAfterEnv": [
+      "<rootDir>client/tests/setupTests.js"
+    ],
+    "testMatch": [
+      "<rootDir>/client/tests/**/*.test.js"
+    ]
   },
   "author": "",
   "license": "ISC",
@@ -31,6 +48,10 @@
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.0.0",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^24.8.0",
     "style-loader": "^0.23.1",
     "webpack": "^4.33.0",
     "webpack-cli": "^3.3.4"
