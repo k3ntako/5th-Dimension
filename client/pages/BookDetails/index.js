@@ -11,7 +11,7 @@ const DOMPurifyOptions = {
 }
 
 const FIELDS = "fields=volumeInfo(authors,categories,description,industryIdentifiers," +
-  "imageLinks(small),pageCount,previewLink,publishedDate,publisher,title)";
+  "imageLinks(small),pageCount,previewLink,publishedDate,publisher,title,subtitle)";
 
 export default class BookDetails extends Component {
 
