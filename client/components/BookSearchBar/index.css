@@ -62,7 +62,7 @@
   cursor: default;
 }
 
-@media screen and (min-width: 401px) and (max-width: 600px){
+@media screen and (min-width: 401px) and (max-width: 700px){
 
   .searchForm.hasFocus {
     height: 128px;
