@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaList } from "react-icons/fa";
 import { FaTable } from "react-icons/fa";
 
+import NoImage from '../../components/NoImage';
 import styles from './Results.css';
 
 export default (props) => {
@@ -21,13 +22,15 @@ export default (props) => {
     }
 
     const imageLink = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : "";
+    const bookCover = imageLink ? <img src={imageLink} /> : <NoImage className={styles.noImage}/>;
+
     const authors = book.volumeInfo.authors && <p>By {book.volumeInfo.authors.join(", ")}</p>;
     const publisher = book.volumeInfo.publisher && <p>Publisher: {book.volumeInfo.publisher}</p>;
 
     return <div key={book.id} className={styles.resultBox}>
       <div className={styles.coverImage}>
         <Link to={`/books/${book.id}`}>
-          <img src={ imageLink || "" } />
+          { bookCover }
         </Link>
       </div>
       <div className={styles.bookInfo}>

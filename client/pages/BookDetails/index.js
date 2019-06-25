@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import styles from './index.css';
 import DOMPurify from 'dompurify';
 
+import NoImage from '../../components/NoImage';
 import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
 
 const DOMPurifyOptions = {
@@ -76,24 +77,26 @@ export default class BookDetails extends Component {
       </div>
     }
 
-    let categoryTitle, categories;
+    let categoryTitle, categories, categoriesHTML;
     if( vInfo.categories ){
       categoryTitle = vInfo.categories.length < 2 ? "Category" : "Categories";
       categories = vInfo.categories.join(", ");
+      categoriesHTML = <div><strong>{categoryTitle}</strong>: {categories}</div>;
     }
 
+    const bookCover = imageLink ? <img className={styles.coverImage} src={imageLink} /> : <NoImage className={styles.coverImage} />;
 
     return <section className="page">
       <h2 className={styles.title}>{vInfo.title}</h2>
       <h4 className={styles.subtitle}>{vInfo.subtitle || ''}</h4>
       <div className={styles.details}>
-        <img className={styles.coverImage} src={imageLink} />
+        { bookCover }
         <div className={styles.info}>
           <div><strong>Publisher</strong>: {vInfo.publisher}</div>
           { publishedDateHTML }
           <div><strong>Page Count</strong>: {vInfo.pageCount} pages</div>
           { identifiers }
-          <div><strong>{categoryTitle}</strong>: {categories}</div>
+          { categoriesHTML }
           <div>
             <p>
               <a href={vInfo.previewLink} target="_blank">More at Google Books</a>

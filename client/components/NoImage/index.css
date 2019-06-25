@@ -1,0 +1,25 @@
+.noImage {
+  width: 90%;
+  padding-top: 20%;
+  padding-bottom: 80%;
+  background-color: #D4643F;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.noImage span {
+  font: bold 2rem 'Overlock SC';
+  text-align: center;
+  color: var(--text-color);
+}
+
+@media screen and (max-width: 500px){
+
+  .noImage {
+    display: none;
+  }
+
+}

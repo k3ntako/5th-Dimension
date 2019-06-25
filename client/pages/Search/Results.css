@@ -35,6 +35,10 @@
   max-width: 160px;
 }
 
+div.noImage {
+  padding-bottom: 50%;
+}
+
 .bookInfo {
   padding-left: 3rem;
   text-align: left;
