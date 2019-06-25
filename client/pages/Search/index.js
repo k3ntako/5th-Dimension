@@ -157,13 +157,13 @@ class Search extends Component {
       }
       title = `Search for ${query}`;
 
-      noResult = totalItems < 1 && !!Object.keys(results).length && !fetchingCurrentPage;
       books = results[currentPage].all;
+      noResult = !fetchingCurrentPage && !books && totalItems !== null;
     }
 
     return <section className="page">
       <Results books={books} title={title} noResults={noResult} />
-      <PageNavigation totalItems={totalItems} currentPage={currentPage} />
+      <PageNavigation totalItems={totalItems} currentPage={currentPage} noBooks={ !books || !books.length } />
     </section>
   }
 }

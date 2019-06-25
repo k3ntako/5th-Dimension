@@ -63,7 +63,6 @@ class BookSearchBar extends Component {
   }
 
   onTypeChange(type){
-    event.preventDefault();
     this.setState({ activeType: type })
   }
 
