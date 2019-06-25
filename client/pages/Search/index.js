@@ -113,7 +113,7 @@ class Search extends Component {
         //Page changed on same search
         this.setState({ searchString: parsed.q, currentPage: parsed.p });
         this.onPageChange( parsed.p );
-      }else if( !parsed.q && this.state.totalItems ){
+      }else if( !parsed.q && this.state.searchString){
         // Going to homepage but old state is still around
         this.setState({
           searchString: "",
