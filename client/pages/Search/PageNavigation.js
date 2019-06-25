@@ -62,9 +62,7 @@ class PageNavigation extends Component {
     return <div className={styles.pageNavigation}>
       <div>{ prevButton }</div>
       <GoogleIcon className={styles.google}/>
-      <div>
-        <div>{ nextButton }</div>
-      </div>
+      <div>{ nextButton }</div>
     </div>
   }
 
