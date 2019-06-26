@@ -91,7 +91,7 @@ class BookSearchBar extends Component {
         onChange={this.onSearchChange}
         onFocus={() => this.setState({ hasFocus: true})}
         onKeyPress={this.listenForEnter} />
-      <div className={`${styles.buttons} ${hasFocusClassName}`}>{ buttons }</div>
+      <div className={`${styles.typeButtons} ${hasFocusClassName}`}>{ buttons }</div>
     </div>
   }
 }

@@ -30,33 +30,33 @@
   background: white;
 }
 
-.buttons {
+.typeButtons {
   display: none;
   opacity: 0;
   transition: opacity 0.1s linear 0.15s;
 }
-.buttons.hasFocus {
+.typeButtons.hasFocus {
   flex: 1;
   display: grid;
   opacity: 1;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: 3rem;
 }
-.buttons > button {
+.typeButtons > button {
   font-size: 1rem;
   border: none;
   border-top: 2px solid rgba(0,0,0,0.2);
   border-right: 2px solid rgba(0,0,0,0.2);
   outline: none;
 }
-.buttons > button:last-child {
+.typeButtons > button:last-child {
   border-right: none;
 }
-.buttons > button:hover {
+.typeButtons > button:hover {
   background-color: #ccdee8;
   cursor: pointer;
 }
-.buttons > .activeButton, .buttons > .activeButton:hover {
+.typeButtons > .activeButton, .typeButtons > .activeButton:hover {
   background-color: #005d90;
   color: white;
   cursor: default;
@@ -68,11 +68,11 @@
     height: 128px;
   }
 
-  .buttons.hasFocus {
+  .typeButtons.hasFocus {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: 3rem 3rem;
   }
-  .buttons > button:nth-child(3n) {
+  .typeButtons > button:nth-child(3n) {
     border-right: none;
   }
 
@@ -84,11 +84,11 @@
     height: 176px;
   }
 
-  .buttons.hasFocus {
+  .typeButtons.hasFocus {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: 3rem 3rem 3rem;
   }
-  .buttons > button:nth-child(2n) {
+  .typeButtons > button:nth-child(2n) {
     border-right: none;
   }
 

@@ -4,7 +4,7 @@ const { mount } = require('enzyme');
 import BookSearchBar from '../../components/BookSearchBar';
 
 describe('<BookSearchBar>', () => {
-  let wrapper;
+  let wrapper, bookSearchBar;
 
   beforeAll(() => {
     wrapper = mount(
@@ -26,12 +26,23 @@ describe('<BookSearchBar>', () => {
   });
 
   it('should display all the search buttons', () => {
-    const buttons = wrapper.find(".buttons").find("button");
-    const buttonTitles = ["All", "Title", "Author", "Publisher", "Category", "ISBN"]
+    const buttons = wrapper.find(".typeButtons").find("button");
+    const buttonTitles = ["All", "Title", "Author", "Publisher", "Category", "ISBN"];
 
-    buttons.forEach(async (button, idx) => {
+    buttons.forEach((button, idx) => {
       expect(button.text()).toEqual(buttonTitles[idx]);
       expect(button.prop("onClick")).toBeDefined();
+      expect(button.hasClass("activeButton")).toEqual(idx === 0);
+
+      button.simulate("click");
+      const clickedButton = wrapper.find(".typeButtons").find("button").at(idx);
+      expect(clickedButton.hasClass("activeButton")).toEqual(true);
     });
   });
+
+  it('clicking on a button should set state', () => {
+    const buttons = wrapper.find(".typeButtons").find("button");
+    buttons.at(1).simulate('click'); // Title button
+    expect(wrapper.find("BookSearchBar").state("activeType")).toEqual("intitle");
+  })
 });

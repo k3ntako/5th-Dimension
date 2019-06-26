@@ -58,7 +58,13 @@ describe('<Nav>', () => {
 
     const settings = navButtons.find(".settings");
     expect(settings.prop("onClick")).toBeDefined();
-    expect(settings.exists("FaSun"));
+    expect(settings.exists("FaSun")).toEqual(true);
+    expect(settings.exists("FaMoon")).toEqual(false);
+    
+    settings.find("FaSun").simulate("click");
+    const updatedSettings = wrapper.find(".settings");
+    expect(updatedSettings.exists("FaSun")).toEqual(false);
+    expect(updatedSettings.exists("FaMoon")).toEqual(true);
 
     const info = navButtons.find(".info");
     const Link = info.find("Link");
