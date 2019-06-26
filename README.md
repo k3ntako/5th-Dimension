@@ -1,4 +1,4 @@
-# Fifth Dimension
+# Fifth Dimension [![CircleCI](https://circleci.com/gh/k3ntako/5th-Dimension.svg?style=svg)](https://circleci.com/gh/k3ntako/5th-Dimension)
 This website allows users to quickly search for books using the [Google Books API Family](https://developers.google.com/books/docs/overview). A demonstration is available at [fifth-dimension.herokuapp.com](https://fifth-dimension.herokuapp.com/).
 
 ## Getting Started
