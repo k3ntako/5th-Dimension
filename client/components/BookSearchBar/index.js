@@ -59,11 +59,12 @@ class BookSearchBar extends Component {
 
   onSearchChange = (event) => {
     const searchString = event.target.value;
-    this.setState({ search: searchString })
+    this.setState({ search: searchString });
   }
 
   onTypeChange(type){
-    this.setState({ activeType: type })
+    this.setState({ activeType: type },
+      () => this.textInput.current.focus());
   }
 
   render(){
