@@ -1,5 +1,3 @@
-import React from 'react';
-const { mount } = require('enzyme');
 import GoogleIcon from '../../components/GoogleIcon';
 
 describe('<GoogleIcon>', () => {

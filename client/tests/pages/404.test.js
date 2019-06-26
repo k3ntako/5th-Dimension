@@ -1,6 +1,3 @@
-import React from 'react';
-import { MemoryRouter } from 'react-router';
-const { mount } = require('enzyme');
 import NotFound from '../../pages/404';
 
 describe('<NotFound>', () => {

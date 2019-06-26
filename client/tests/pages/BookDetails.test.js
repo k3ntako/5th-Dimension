@@ -1,5 +1,3 @@
-import React from 'react';
-const { mount, render } = require('enzyme');
 import BookDetails from '../../pages/BookDetails';
 import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
 
@@ -7,40 +5,50 @@ const descriptionTitle = "The Year 2000";
 const descriptionOne = "This is a book about what I think the year 2000 will look like. I promise there will be flying horses.";
 const descriptionTwo = "I think you will enjoy this one!";
 
+const BOOK_LINK = "https://www.googleapis.com/books/v1/volumes/SHGJ23FD6?fields=volumeInfo(authors,categories,description,industryIdentifiers,imageLinks(small),pageCount,previewLink,publishedDate,publisher,title,subtitle)"
+const BOOK_RESPONSE = {
+  volumeInfo: {
+    authors: ["George Washington"],
+    categories: ["US"],
+    description: `<h3>${descriptionTitle}</h3><p>${descriptionOne}</p><p>${descriptionTwo}</p>`,
+    imageLinks: {
+      small: "http://www.example.com/image/1"
+    },
+    industryIdentifiers: [
+      { type: "ISBN_10", identifier: "1234567890" },
+      { type: "ISBN_13", identifier: "1234567890123" },
+    ],
+    pageCount: 400,
+    previewLink: "http://www.example.com",
+    publishedDate: "1798-02-22",
+    publisher: "Minuteman Publishing",
+    title: "The Year 2000",
+    subtitle: "The Future"
+  }
+};
+
+
 describe('<BookDetails> component with book info', () => {
-  let wrapper, bookFetch, volumeInfo;
+  let wrapper;
+  const volumeInfo = BOOK_RESPONSE.volumeInfo;
 
-  beforeAll(() => {
+  beforeEach((done) => {
     const match = { params: { id: "SHGJ23FD6" }};
+    fetchMock.get(BOOK_LINK, {
+      status: 200,
+      body: BOOK_RESPONSE
+    });
 
-    wrapper = mount( <BookDetails match={match}/> );
-
-    bookFetch = new AbortableFetchGoogle;
-    bookFetch._fetchSucessful = true;
-    bookFetch._isFetching = false;
-    bookFetch._response = {
-      volumeInfo: {
-        authors: ["George Washington"],
-        categories: ["US"],
-        description: `<h3>${descriptionTitle}</h3><p>${descriptionOne}</p><p>${descriptionTwo}</p>`,
-        imageLinks: {
-          small: "http://www.example.com/image/1"
-        },
-        industryIdentifiers: [
-          { type: "ISBN_10", identifier: "1234567890" },
-          { type: "ISBN_13", identifier: "1234567890123" },
-        ],
-        pageCount: 400,
-        previewLink: "http://www.example.com",
-        publishedDate: "1798-02-22",
-        publisher: "Minuteman Publishing",
-        title: "The Year 2000",
-        subtitle: "The Future"
-      }
-    };
-    volumeInfo = bookFetch.response.volumeInfo;
-    wrapper.setState({ bookFetch });
+    wrapper = mount( <MemoryRouter><BookDetails match={match}/></MemoryRouter> );
+    setImmediate(() => {
+      wrapper = wrapper.update();
+      done();
+    });
   });
+
+  afterEach(() => {
+    fetchMock.restore();
+  })
 
   it('should display book title, subtitle and image', () => {
     expect(wrapper.find('h2.title').text()).toEqual(volumeInfo.title);

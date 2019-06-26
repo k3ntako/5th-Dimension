@@ -1,6 +1,3 @@
-import React from 'react';
-import { MemoryRouter } from 'react-router';
-const { mount } = require('enzyme');
 import Nav from '../../components/Nav';
 
 describe('<Nav>', () => {
@@ -60,7 +57,7 @@ describe('<Nav>', () => {
     expect(settings.prop("onClick")).toBeDefined();
     expect(settings.exists("FaSun")).toEqual(true);
     expect(settings.exists("FaMoon")).toEqual(false);
-    
+
     settings.find("FaSun").simulate("click");
     const updatedSettings = wrapper.find(".settings");
     expect(updatedSettings.exists("FaSun")).toEqual(false);

@@ -1,5 +1,3 @@
-import React from 'react';
-const { mount } = require('enzyme');
 import NoImage from '../../components/NoImage';
 
 describe('<NoImage>', () => {

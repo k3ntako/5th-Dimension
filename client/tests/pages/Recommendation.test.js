@@ -1,13 +1,10 @@
-import React from 'react';
-import { MemoryRouter } from 'react-router';
-const { mount } = require('enzyme');
 import Recommendations from '../../pages/Search/Recommendations';
 
 
 describe('<Recommendations>', () => {
   let wrapper, bestSellers;
 
-  beforeAll(() => {
+  beforeAll((done) => {
 
     wrapper = mount(
       <MemoryRouter>
@@ -27,7 +24,7 @@ describe('<Recommendations>', () => {
         }
       });
     }
-    wrapper.find("Recommendations").setState({ bestSellers });
+    wrapper.find("Recommendations").setState({ bestSellers }, done);
   });
 
   it('Should display three headings', () => {
@@ -58,6 +55,6 @@ describe('<Recommendations>', () => {
       const authorAndPublisher = book.find("p");
       expect(authorAndPublisher.at(0).text()).toEqual("By " + bookInfo.authors.join(", "));
       expect(authorAndPublisher.at(1).text()).toEqual("Publisher: " + bookInfo.publisher);
-    })
+    });
   });
 });
