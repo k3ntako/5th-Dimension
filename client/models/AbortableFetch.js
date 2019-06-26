@@ -47,6 +47,7 @@ class AbortableFetch {
 
       this._isFetching = false;
     }catch( err ){
+      console.error(err);
       this._isFetching = false;
       this._fetchSucessful = false;
     }

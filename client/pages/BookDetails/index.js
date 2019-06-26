@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import styles from './index.css';
 import DOMPurify from 'dompurify';
 
+import FetchFailed from './FetchFailed';
 import NoImage from '../../components/NoImage';
 import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
 
@@ -20,7 +21,8 @@ export default class BookDetails extends Component {
     super(props);
 
     this.state = {
-      bookFetch: null
+      bookFetch: null,
+      fetchFailed: false
     };
 
     this.fetch = null;
@@ -28,13 +30,14 @@ export default class BookDetails extends Component {
 
   async componentDidMount(){
     try{
-      const bookFetch = new AbortableFetchGoogle;
-      this.fetch = bookFetch;
+      this.fetch = new AbortableFetchGoogle;
       const link = `https://www.googleapis.com/books/v1/volumes/${this.props.match.params.id}?${FIELDS}`;
-      await bookFetch.aFetch( link );
+      await this.fetch.aFetch( link );
 
-      if( bookFetch.fetchSucessful ){
-        this.setState({ bookFetch: bookFetch });
+      if( this.fetch.fetchSucessful ){
+        this.setState({ bookFetch: this.fetch });
+      }else if( !this.fetch.didAbort ){
+        this.setState({ fetchFailed: true });
       }
     }catch( err ){
       console.error(err);
@@ -46,8 +49,10 @@ export default class BookDetails extends Component {
   }
 
   render(){
-    const { bookFetch } = this.state;
-    if( !bookFetch ){
+    const { bookFetch, fetchFailed } = this.state;
+    if( fetchFailed ){
+      return <FetchFailed />
+    }else if( !bookFetch ){
       return null;
     }
 
