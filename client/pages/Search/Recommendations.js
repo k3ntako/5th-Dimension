@@ -56,7 +56,7 @@ export default class Recommendations extends Component {
 
       let fetches = await Promise.all(fetchPromises);
 
-      const aborted = fetches.some(fetch => !fetch.fetchSucessful);
+      const aborted = fetches.some(fetch => fetch.didAbort);
       const books = this.state.bestSellers.map(book => book.first);
       if( !aborted ){
         const books = fetches.map(fetch => fetch.first);

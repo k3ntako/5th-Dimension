@@ -67,9 +67,14 @@ class Search extends Component {
           totalItems: googleFetch.response.totalItems,
           fetchingCurrentPage: false
         });
+      }else if( !googleFetch.isFetching && !googleFetch.didAbort){
+        this.setState({
+          totalItems: 0,
+          fetchingCurrentPage: false
+        });
       }
 
-      if( !results[currentPage + 1] ){
+      if( !results[currentPage + 1] && !googleFetch.didAbort ){
         this.setUpFetch( currentPage + 1 );
       }
     }catch( err ){
@@ -141,6 +146,7 @@ class Search extends Component {
 
   render(){
     const { currentPage, fetchingCurrentPage, results, searchString, totalItems } = this.state;
+
     // Homepage (user hasn't searched yet)
     if( !searchString ){
       return <section className="page">
@@ -158,12 +164,15 @@ class Search extends Component {
       title = `Search for ${query}`;
 
       books = results[currentPage].all;
-      noResult = !fetchingCurrentPage && !books && totalItems !== null;
+      noResult = !fetchingCurrentPage && !books && totalItems !== null; //totalItems === null means it's searching
     }
 
     return <section className="page">
       <Results books={books} title={title} noResults={noResult} />
-      <PageNavigation totalItems={totalItems} currentPage={currentPage} noBooks={ !books || !books.length } />
+      <PageNavigation
+        totalItems={totalItems}
+        currentPage={currentPage}
+        currentPageBookCount={books && books.length} />
     </section>
   }
 }

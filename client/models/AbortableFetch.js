@@ -11,6 +11,7 @@ class AbortableFetch {
     this._response = null;
     this._isFetching = false;
     this._fetchSucessful = null;
+    this._didAbort = false;
   }
 
   get response(){
@@ -23,6 +24,10 @@ class AbortableFetch {
 
   get fetchSucessful(){
     return this._fetchSucessful;
+  }
+
+  get didAbort(){
+    return this._didAbort;
   }
 
   async aFetch( url ){
@@ -105,6 +110,9 @@ class AbortableFetch {
 
 
   abort(){
+    this._didAbort = true;
+    this._isFetching = false;
+    this._fetchSucessful = false;
     if( !this._controller && this._isFetching ){
       console.warn("No AbortController, could not abort fetch.");
     }else if( this._isFetching ){

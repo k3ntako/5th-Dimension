@@ -13,21 +13,20 @@ class PageNavigation extends Component {
 
   constructor(props){
     super(props);
-
-    this.state = {
-    };
   }
 
   nextPage = () => {
     const parsed = this.parseQuery(this.props.location.search.slice(1));
 
-    this.props.history.push(`/search?q=${parsed.q}&p=${Number(parsed.p) + 1}`)
+    this.props.history.push(`/search?q=${parsed.q}&p=${Number(parsed.p) + 1}`);
+    window.scroll(0,0)
   }
 
   prevPage = () => {
     const parsed = this.parseQuery(this.props.location.search.slice(1));
     const newCurrentPage = parsed.p > 0 ? parsed.p - 1 : 0;
-    this.props.history.push(`/search?q=${parsed.q}&p=${newCurrentPage}`)
+    this.props.history.push(`/search?q=${parsed.q}&p=${newCurrentPage}`);
+    window.scroll(0,0)
   }
 
   parseQuery( toParse ){
@@ -37,14 +36,15 @@ class PageNavigation extends Component {
   }
 
   render(){
-    if( !this.props.totalItems || this.props.noBooks ){
+    const { totalItems, currentPageBookCount, currentPage } = this.props;
+
+    if( !totalItems || !currentPageBookCount ){
       return null;
     }
 
-
     let prevButton, nextButton;
 
-    if( this.props.currentPage > 0 ){
+    if( currentPage > 0 ){
       prevButton = <button className={`${styles.button} ${styles.prev}`} onClick={this.prevPage}>
         <IoMdArrowRoundBack size={"1.4rem"} />
         <span>Back</span>
@@ -52,7 +52,7 @@ class PageNavigation extends Component {
     }
 
     const parsed = this.parseQuery(this.props.location.search.slice(1));
-    if( Math.ceil(this.props.totalItems / MAX_RESULTS) > parsed.p ){
+    if( Math.ceil(this.props.totalItems / MAX_RESULTS) > parsed.p && currentPageBookCount === 12 ){
       nextButton = <button className={`${styles.button} ${styles.next}`} onClick={this.nextPage}>
         <span>Next</span>
         <IoMdArrowRoundForward size={"1.4rem"} />
