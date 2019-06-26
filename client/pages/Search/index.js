@@ -104,7 +104,7 @@ class Search extends Component {
       const parsed = this.parseQuery(this.props.location.search.slice(1));
       const oldParsed = this.parseQuery(prevProps.location.search.slice(1));
 
-      if( parsed.q && (!oldParsed.q || oldParsed.q !== parsed.q)){
+      if( parsed.q && (!oldParsed.q || oldParsed.q !== parsed.q) ){
         //Search Term Changed or New Search
         this.setState({
           searchString: parsed.q,
@@ -114,11 +114,11 @@ class Search extends Component {
         }, () => {
           this.setUpFetch(parsed.p);
         });
-      }else if( parsed && oldParsed && oldParsed.q === parsed.q && oldParsed.p !== parsed.p  ){
+      }else if( parsed && oldParsed && oldParsed.q === parsed.q && oldParsed.p !== parsed.p ){
         //Page changed on same search
         this.setState({ searchString: parsed.q, currentPage: parsed.p });
         this.onPageChange( parsed.p );
-      }else if( !parsed.q && this.state.searchString){
+      }else if( !parsed.q && this.state.searchString ){
         // Going to homepage but old state is still around
         this.setState({
           searchString: "",

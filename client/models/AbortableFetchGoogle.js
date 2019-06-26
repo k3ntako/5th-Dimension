@@ -1,6 +1,6 @@
-import AbortableFetch from './AbortableFetch';
+import AbortableFetchWithCaching from './AbortableFetchWithCaching';
 
-class AbortableFetchGoogle extends AbortableFetch{
+class AbortableFetchGoogle extends AbortableFetchWithCaching{
   constructor(){
     super();
   }

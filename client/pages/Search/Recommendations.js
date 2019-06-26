@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import GoogleIcon from './../../components/GoogleIcon';
 import Results from './Results';
-import AbortableFetch from './../../models/AbortableFetch';
 import AbortableFetchGoogle from './../../models/AbortableFetchGoogle';
+import AbortableFetchWithCaching from './../../models/AbortableFetchWithCaching';
 
 import styles from './Recommendations.css';
 
@@ -38,7 +38,7 @@ export default class Recommendations extends Component {
       let fourAMTomorrow = createFourAM(1);
       let fourAMNextWeek = createFourAM(6);
 
-      const nytFetch = new AbortableFetch();
+      const nytFetch = new AbortableFetchWithCaching();
       this.fetches.push( nytFetch );
       await nytFetch.getCacheOrFetch(NYT_LINK, "combined-print-and-e-book-fiction", fourAMTomorrow);
 
