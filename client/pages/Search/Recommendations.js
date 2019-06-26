@@ -13,6 +13,14 @@ const fields = "&fields=items(id,volumeInfo(authors,imageLinks(thumbnail),publis
 const GOOGLE_API_KEY = "&key=" + "AIzaSyCiP-gK-4paqp4nt-E8xWZFjTST-2o8E8w";
 const googleByISBN = (isbn) => `https://www.googleapis.com/books/v1/volumes?maxResults=1&q=ISBN:${isbn}${fields}${GOOGLE_API_KEY}`;
 
+const createFourAM = ( daysFromNow ){
+  let fourAM = newDate();
+  fourAM.setHours(4);
+  fourAM.setMinutes(0);
+  fourAM.setDate(fourAM.getDate() + daysFromNow * 24 * 60 * 60 * 1000);
+  return fourAM;
+}
+
 export default class Recommendations extends Component {
 
   constructor(props){
@@ -27,11 +35,8 @@ export default class Recommendations extends Component {
 
   async componentDidMount(){
     try{
-      let fourAM = new Date();
-      fourAM.setHours(4);
-      fourAM.setMinutes(0);
-      const fourAMTomorrow = fourAM.setDate(fourAM.getDate() + 1);
-      const fourAMNextWeek = fourAM.setDate(fourAM.getDate() + 6);
+      let fourAMTomorrow = createFourAM(1);
+      let fourAMNextWeek = createFourAM(6);
 
       const nytFetch = new AbortableFetch();
       this.fetches.push( nytFetch );
