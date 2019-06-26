@@ -4,7 +4,7 @@ class AbortableFetch {
       this._controller = new AbortController();
       this._signal = this._controller.signal;
     }catch(err){
-      console.log("AbortController not found");
+      console.warn("AbortController not found");
       this._controller = null;
       this._signal = null;
     }
@@ -106,7 +106,7 @@ class AbortableFetch {
 
   abort(){
     if( !this._controller && this._isFetching ){
-      console.log("No AbortController, could not abort fetch.");
+      console.warn("No AbortController, could not abort fetch.");
     }else if( this._isFetching ){
       this._controller.abort();
     }

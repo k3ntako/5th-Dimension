@@ -13,9 +13,7 @@ describe('<BookDetails> component with book info', () => {
   beforeAll(() => {
     const match = { params: { id: "SHGJ23FD6" }};
 
-    wrapper = mount(
-      <BookDetails match={match}/>
-    );
+    wrapper = mount( <BookDetails match={match}/> );
 
     bookFetch = new AbortableFetchGoogle;
     bookFetch._fetchSucessful = true;

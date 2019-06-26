@@ -49,11 +49,11 @@ export default (props) => {
         { menuIcon }
         <div className={`${styles.menuItems} ${menuActive ? styles.showMenu : ""}`}>
           <div className={styles.backgroundClick} onClick={() => setMenuActive(false)}/>
-          <Link to="/about" onClick={() => setMenuActive(false)}>About 5th Dimension </Link>
+          <Link to="/about" onClick={() => setMenuActive(false)}>About 5th Dimension</Link>
           <a onClick={menuToggleDarkMode}>Turn {isDarkModeOn ? "Off" : "On"} Dark Mode</a>
         </div>
       </div>
-      <div className={`${styles.buttons} ${styles.desktop}`}>
+      <div className={`${styles.navButtons} ${styles.desktop}`}>
         <div className={styles.settings} onClick={toggleDarkMode}>
           { darkModeIcon }
         </div>

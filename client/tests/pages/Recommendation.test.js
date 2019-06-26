@@ -1,5 +1,5 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router'
+import { MemoryRouter } from 'react-router';
 const { mount } = require('enzyme');
 import Recommendations from '../../pages/Search/Recommendations';
 

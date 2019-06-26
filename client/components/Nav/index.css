@@ -32,20 +32,20 @@
   display: none;
 }
 
-.buttons {
+.navButtons {
   display: flex;
 }
-.buttons > div {
+.navButtons > div {
   height: 100%;
   display: flex;
   align-items: center;
   color: white;
   padding: 0 0.5rem;
 }
-.buttons svg {
+.navButtons svg {
   cursor: pointer;
 }
-.buttons svg:hover, .menu svg:hover {
+.navButtons svg:hover, .menu svg:hover {
   color: #999;
 }
 
