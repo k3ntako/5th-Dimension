@@ -46,17 +46,19 @@ describe('<BookDetails> component with book info', () => {
     });
   });
 
-  afterEach(() => {
+  afterEach((done) => {
     fetchMock.restore();
+    done();
   })
 
-  it('should display book title, subtitle and image', () => {
+  it('should display book title, subtitle and image', (done) => {
     expect(wrapper.find('h2.title').text()).toEqual(volumeInfo.title);
     expect(wrapper.find('h4.subtitle').text()).toEqual(volumeInfo.subtitle);
     expect(wrapper.find('img.coverImage').prop("src")).toEqual(volumeInfo.imageLinks.small);
+    done();
   });
 
-  it('should display book info', () => {
+  it('should display book info', (done) => {
     const info = wrapper.find("div.info");
     const infoDivs = info.findWhere(node => {
       return node.type() === "div" && !node.prop("className");
@@ -88,9 +90,10 @@ describe('<BookDetails> component with book info', () => {
         expect(link.prop("href")).toEqual(infoMap[idx].info);
       }
     });
+    done();
   });
 
-  it('should display book description with HTML', () => {
+  it('should display book description with HTML', (done) => {
     const description = wrapper.find(".description").render();
     const heading = description.find('h3')
     expect(heading.length).toEqual(1);
@@ -100,5 +103,6 @@ describe('<BookDetails> component with book info', () => {
     expect(paragraph.length).toEqual(2);
     expect(paragraph.eq(0).text()).toEqual(descriptionOne);
     expect(paragraph.eq(1).text()).toEqual(descriptionTwo);
+    done();
   });
 });

@@ -40,8 +40,10 @@ describe('<Recommendations>', () => {
     expect(nytTitle.hasClass("websiteName")).toEqual(false);
   });
 
-  it('Should display six books', () => {
+  it('Should display six books', (done) => {
     const results = wrapper.find(".resultBox");
+    expect(results.length).toEqual(6);
+
     results.forEach((book, idx) => {
       const bookInfo = bestSellers[idx].volumeInfo;
 
@@ -56,5 +58,7 @@ describe('<Recommendations>', () => {
       expect(authorAndPublisher.at(0).text()).toEqual("By " + bookInfo.authors.join(", "));
       expect(authorAndPublisher.at(1).text()).toEqual("Publisher: " + bookInfo.publisher);
     });
+
+    done();
   });
 });
