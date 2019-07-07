@@ -9,25 +9,19 @@ class AbortableFetchWithCaching extends AbortableFetch{
     try{
       this._isFetching = true;
 
+      this.removeExpiredCache();
+
+      // Clear cache if there are more than 50 items
+      // Protection from overloading localStorage
+      if( Object.keys(localStorage).length > 50 ) this.clearAllCache();
+
       const cachedContent = this.getCache(cacheKey);
 
-      if( cachedContent && cachedContent.cached && new Date(cachedContent.cached.expires) > Date.now()){
+      if( cachedContent && cachedContent.cached ){
         this._response = cachedContent;
         this._fetchSucessful = true;
         this._isFetching = false;
       }else{
-        const FIVE_MINS = Date.now() + 1000 * 60 * 5;
-        for( let key in localStorage ){
-          if( key.slice(0,6) !== 'aFetch' ){
-            continue;
-          }
-          const content = JSON.parse(localStorage.getItem(key));
-          const expires = content && content.cached && content.cached.expires;
-          if( typeof expires === 'number' && expires < FIVE_MINS ){
-            localStorage.removeItem(key);
-          }
-        }
-
         await this.aFetch( url );
 
         if( this._fetchSucessful ){
@@ -58,6 +52,37 @@ class AbortableFetchWithCaching extends AbortableFetch{
       return true;
     }
     return false;
+  }
+
+  removeExpiredCache(){
+    // Erase anything that will expire within 5 mins
+    const FIVE_MINS = Date.now() + 1000 * 60 * 5;
+    // Erase anything that will expire in more than 10 days
+    // Currently, nothing should be in localStorage for more than 7 days
+    const TEN_DAYS = Date.now() + 1000 * 60 * 60 * 24 * 10;
+
+    for( let key in localStorage ){
+      if( key.slice(0,6) !== 'aFetch' ){
+        continue;
+      }
+      const content = JSON.parse(localStorage.getItem(key));
+      const expires = content && content.cached && new Date(content.cached.expires);
+      if( !expires || !expires.getTime() || !content || expires < FIVE_MINS || TEN_DAYS < expires ){
+        localStorage.removeItem(key);
+      }
+    }
+  }
+
+  clearAllCache(){
+    try{
+      const darkMode = localStorage.getItem("dark-mode");
+      localStorage.clear();
+      localStorage.setItem("dark-mode", darkMode);
+      return true;
+    }catch( err ){
+      console.error(err);
+      return false;;
+    }
   }
 
 }
