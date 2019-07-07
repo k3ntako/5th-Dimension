@@ -80,12 +80,18 @@ export default class BookDetails extends Component {
     })
 
     let publishedDateHTML;
-    if( vInfo.publishedDate && typeof vInfo.publishedDate === 'string' ){
-      const dateSplit = vInfo.publishedDate.split("-")
+    const dateExists = vInfo.publishedDate && typeof vInfo.publishedDate === 'string';
+    const validDateFormat = dateExists && /^((\d){4}-(\d){2}-(\d){2})$/.test(vInfo.publishedDate);
+    if( dateExists && validDateFormat ){
+      const dateSplit = vInfo.publishedDate.split("-");
       const publishedDate = new Date(Date.UTC(dateSplit[0], dateSplit[1], dateSplit[2], 12));
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       publishedDateHTML = <div>
         <strong>Published</strong>: {publishedDate.toLocaleDateString('en-US', options)}
+      </div>
+    }else if( dateExists && !validDateFormat ){
+      publishedDateHTML = <div>
+        <strong>Published</strong>: { vInfo.publishedDate }
       </div>
     }
 
@@ -97,6 +103,7 @@ export default class BookDetails extends Component {
     }
 
     const bookCover = imageLink ? <img className={styles.coverImage} src={imageLink} /> : <NoImage className={styles.coverImage} />;
+    const pageCount = vInfo.pageCount && <div><strong>Page Count</strong>: {vInfo.pageCount} pages</div>;
 
     return <section className="page">
       <h2 className={styles.title}>{vInfo.title}</h2>
@@ -106,7 +113,7 @@ export default class BookDetails extends Component {
         <div className={styles.info}>
           <div><strong>Publisher</strong>: {vInfo.publisher}</div>
           { publishedDateHTML }
-          <div><strong>Page Count</strong>: {vInfo.pageCount} pages</div>
+          { pageCount }
           { identifiers }
           { categoriesHTML }
           <div>
