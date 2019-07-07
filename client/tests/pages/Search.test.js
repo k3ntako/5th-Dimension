@@ -1,4 +1,5 @@
 import Search from '../../pages/Search';
+import { MAX_RESULTS } from '../../utilities/GoogleBooksURL';
 
 
 describe('<Search> without search', () => {
@@ -39,7 +40,7 @@ describe('<Search> after user search', () => {
 
   beforeEach((done) => {
     items = [];
-    for(let i = 0; i < 12; i++){
+    for(let i = 0; i < MAX_RESULTS; i++){
       items.push({
         id: String(i),
         volumeInfo: {
@@ -95,7 +96,7 @@ describe('<Search> after user search', () => {
 
   it('should display twelve books', (done) => {
     const results = wrapper.find(".resultBox");
-    expect(results.length).toEqual(12);
+    expect(results.length).toEqual(MAX_RESULTS);
 
     results.forEach((book, idx) => {
       const bookInfo = items[idx].volumeInfo;
@@ -173,13 +174,13 @@ describe('<Search> on second page of search', () => {
     done();
   })
 
-  it('should display pageNavigation with next button and Google icon', (done) => {
+  it('should display pageNavigation without next button and Google icon', (done) => {
     const pageNavigation = wrapper.find("PageNavigation");
     const backButton = pageNavigation.find("button.prev");
     expect(backButton.text()).toEqual("Back");
     expect(backButton.exists("IoMdArrowRoundBack")).toEqual(true);
     expect(pageNavigation.exists("IoMdArrowRoundForward")).toEqual(false);
-    // next button hidden because there are less than 12 results (aka a full page)
+    // next button hidden because there are less than MAX_RESULTS, 24, (aka a full page)
     done();
   });
 });

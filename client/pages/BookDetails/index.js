@@ -82,7 +82,7 @@ export default class BookDetails extends Component {
     let publishedDateHTML;
     if( vInfo.publishedDate && typeof vInfo.publishedDate === 'string' ){
       const dateSplit = vInfo.publishedDate.split("-")
-      const publishedDate = new Date(Date.UTC(dateSplit[0], dateSplit[1], [2], 12));
+      const publishedDate = new Date(Date.UTC(dateSplit[0], dateSplit[1], dateSplit[2], 12));
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
       publishedDateHTML = <div>
         <strong>Published</strong>: {publishedDate.toLocaleDateString('en-US', options)}

@@ -10,7 +10,7 @@ import Results from './Results';
 import PageNavigation from './PageNavigation';
 import Recommendations from './Recommendations';
 
-const FIELDS = "&fields=totalItems,items(id,volumeInfo(authors,imageLinks(thumbnail),publisher,title,subtitle))";
+const FIELDS = "fields=totalItems,items(id,volumeInfo(authors,imageLinks(thumbnail),publisher,title,subtitle))";
 
 const options = {
   intitle: "title",
@@ -57,7 +57,7 @@ class Search extends Component {
 
       const searchQuery = searchString.replace(/\s+/g, "+"); // replaces whitespace with "+"
       const url = googleBooksURL({
-        search: `&startIndex=${pageNum * MAX_RESULTS}&q=${searchQuery}&${FIELDS}`
+        search: `startIndex=${pageNum * MAX_RESULTS}&q=${searchQuery}&${FIELDS}`
       });
 
       const googleFetch = results[pageNum];
