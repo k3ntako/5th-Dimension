@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import qs from 'qs';
 import { IoMdBook } from "react-icons/io";
@@ -154,7 +155,7 @@ class Search extends Component {
       </section>
     }
 
-    let books, noResult, title;
+    let books, noResult = false, title;
     if( results && results[currentPage] ){
       let query = searchString;
       for( let type in options ){
@@ -175,6 +176,12 @@ class Search extends Component {
         currentPageBookCount={books && books.length} />
     </section>
   }
+}
+
+Search.propTypes = {
+  location: PropTypes.shape({
+    search: PropTypes.string,
+  }),
 }
 
 export default withRouter(Search);

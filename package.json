@@ -36,6 +36,7 @@
     "concurrently": "^4.1.0",
     "dompurify": "^1.0.10",
     "express": "^4.17.1",
+    "prop-types": "^15.7.2",
     "qs": "^6.7.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

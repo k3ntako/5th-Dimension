@@ -15,7 +15,7 @@ describe('<Recommendations>', () => {
     bestSellers = [];
     for(let i = 0; i < 6; i++){
       bestSellers.push({
-        id: i,
+        id: String(i),
         volumeInfo: {
           authors: ["Author" + i],
           imageLinks: { thumbnail: "http://www.example.com/image/" + i },

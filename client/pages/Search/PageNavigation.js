@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import qs from 'qs';
 import { IoMdArrowRoundForward } from "react-icons/io";
@@ -66,6 +67,18 @@ class PageNavigation extends Component {
     </div>
   }
 
+}
+
+PageNavigation.propTypes = {
+  totalItems: PropTypes.number,
+  currentPageBookCount: PropTypes.number,
+  currentPage: PropTypes.number,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }),
+  location: PropTypes.shape({
+    search: PropTypes.string.isRequired,
+  }),
 }
 
 export default withRouter(PageNavigation);

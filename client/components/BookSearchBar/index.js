@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { IoMdBook } from "react-icons/io";
 import styles from './index.css';
@@ -96,5 +97,10 @@ class BookSearchBar extends Component {
   }
 }
 
+BookSearchBar.propTypes = {
+  history: PropTypes.shape({ //not exact (allows extra properties)
+    push: PropTypes.func.isRequired,
+  }),
+}
 
 export default withRouter(BookSearchBar);

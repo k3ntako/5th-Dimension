@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
-import styles from './index.css';
+import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 
 import FetchFailed from './FetchFailed';
 import NoImage from '../../components/NoImage';
 import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
+
+import styles from './index.css';
 
 const DOMPurifyOptions = {
   ALLOWED_TAGS: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'ul', 'ol', 'li',
@@ -114,4 +116,12 @@ export default class BookDetails extends Component {
       </div>
     </section>
   }
+}
+
+BookDetails.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }),
+  }),
 }

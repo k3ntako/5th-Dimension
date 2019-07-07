@@ -5,7 +5,7 @@ import NavOptions from './NavOptions';
 
 import styles from './index.css';
 
-export default (props) => {
+export default () => {
   return <div className={styles.navWrapper}>
     <div className={styles.nav}>
       <div className={styles.titleAndSearch}>

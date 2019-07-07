@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { FaList } from "react-icons/fa";
 import { FaTable } from "react-icons/fa";
 
@@ -6,7 +7,7 @@ import BookCard from './BookCard';
 import NoImage from '../../components/NoImage';
 import styles from './Results.css';
 
-export default (props) => {
+const Results = (props) => {
   const [isTable, setIsTable] = useState(true);
 
   const books = props.books;
@@ -33,3 +34,24 @@ export default (props) => {
     </div>
   </div>
 }
+
+Results.propTypes = {
+  books: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      volumeInfo: PropTypes.shape({
+        imageLinks: PropTypes.shape({
+          thumbnail: PropTypes.string,
+        }),
+        authors: PropTypes.arrayOf(PropTypes.string),
+        publisher: PropTypes.string,
+        title: PropTypes.string.isRequired,
+        subtitle: PropTypes.string,
+      }),
+    }),
+  ),
+  noResults: PropTypes.bool,
+  title: PropTypes.string,
+}
+
+export default Results;

@@ -41,7 +41,7 @@ describe('<Search> after user search', () => {
     items = [];
     for(let i = 0; i < 12; i++){
       items.push({
-        id: i,
+        id: String(i),
         volumeInfo: {
           authors: ["Author" + i],
           imageLinks: { thumbnail: "http://www.example.com/image/" + i },
@@ -134,7 +134,7 @@ describe('<Search> on second page of search', () => {
     items = [];
     for(let i = 0; i < 6; i++){
       items.push({
-        id: i,
+        id: String(i),
         volumeInfo: {
           authors: ["Author" + i],
           imageLinks: { thumbnail: "http://www.example.com/image/" + i },

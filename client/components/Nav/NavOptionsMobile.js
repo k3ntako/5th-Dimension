@@ -1,11 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { FaBars } from "react-icons/fa";
 import { FaTimes } from "react-icons/fa";
 
 import styles from './index.css';
 
-export default (props) => {
+const NavOptionsMobile = (props) => {
   const openMenu = () => props.setIsMenuActive(true);
   const closeMenu = () => props.setIsMenuActive(false);
 
@@ -21,3 +22,12 @@ export default (props) => {
     </div>
   </div>
 }
+
+NavOptionsMobile.propTypes = {
+  isDarkModeOn: PropTypes.bool.isRequired,
+  isMenuActive: PropTypes.bool.isRequired,
+  menuToggleDarkMode: PropTypes.func.isRequired,
+  setIsMenuActive: PropTypes.func.isRequired,
+}
+
+export default NavOptionsMobile;

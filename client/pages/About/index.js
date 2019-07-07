@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './index.css';
 
 const GOOGLE_BOOKS_API_LINK = <a href="https://developers.google.com/books/docs/overview" target="_blank">
   Google Books API Family

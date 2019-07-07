@@ -36,4 +36,19 @@ const BookCard = (props) => {
   </div>
 }
 
+BookCard.propTypes = {
+  book: PropTypes.shape({
+    id: PropTypes.string,
+    volumeInfo: PropTypes.shape({
+      imageLinks: PropTypes.shape({
+        thumbnail: PropTypes.string,
+      }),
+      authors: PropTypes.arrayOf(PropTypes.string),
+      publisher: PropTypes.string,
+      title: PropTypes.string.isRequired,
+      subtitle: PropTypes.string,
+    }),
+  }),
+}
+
 export default BookCard;

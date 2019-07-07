@@ -6,9 +6,9 @@ import NavOptionsMobile from './NavOptionsMobile';
 
 import styles from './index.css';
 
-export default class NaOptions extends Component{
-  constructor(props){
-    super(props);
+export default class NavOptions extends Component{
+  constructor(){
+    super();
 
     this.state = {
       isDarkModeOn: false,
