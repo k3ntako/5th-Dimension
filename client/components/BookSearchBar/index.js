@@ -89,7 +89,7 @@ class BookSearchBar extends Component {
         className={`${styles.searchBar} ${hasTextClassName} ${hasFocusClassName}`}
         value={search}
         onChange={this.onSearchChange}
-        onFocus={() => this.setState({ hasFocus: true})}
+        onFocus={() => this.setState({ hasFocus: true })}
         onKeyPress={this.listenForEnter} />
       <div className={`${styles.typeButtons} ${hasFocusClassName}`}>{ buttons }</div>
     </div>
