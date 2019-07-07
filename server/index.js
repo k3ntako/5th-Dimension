@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const apiRoutes = require('./API/v1');
 
 // Express Set-up
 const app = express();
@@ -9,9 +8,6 @@ const app = express();
 // Express Middleware
 app.use(bodyParser.json())
 app.use('/', express.static( path.join(__dirname, '..', 'public') ));
-
-// API
-app.use('/api/v1', apiRoutes);
 
 // Front-End
 app.get('*', (req,res) => {
