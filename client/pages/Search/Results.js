@@ -4,7 +4,6 @@ import { FaList } from "react-icons/fa";
 import { FaTable } from "react-icons/fa";
 
 import BookCard from './BookCard';
-import NoImage from '../../components/NoImage';
 import styles from './Results.css';
 
 const Results = (props) => {

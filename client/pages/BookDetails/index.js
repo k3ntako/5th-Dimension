@@ -5,6 +5,7 @@ import DOMPurify from 'dompurify';
 import FetchFailed from './FetchFailed';
 import NoImage from '../../components/NoImage';
 import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
+import { googleBooksURL } from '../../utilities/GoogleBooksURL';
 
 import styles from './index.css';
 
@@ -33,7 +34,11 @@ export default class BookDetails extends Component {
   async componentDidMount(){
     try{
       this.fetch = new AbortableFetchGoogle;
-      const link = `https://www.googleapis.com/books/v1/volumes/${this.props.match.params.id}?${FIELDS}`;
+      const link = googleBooksURL({
+        params: this.props.match.params.id,
+        search: FIELDS
+      });
+
       await this.fetch.aFetch( link );
 
       if( this.fetch.fetchSucessful ){

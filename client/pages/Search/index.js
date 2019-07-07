@@ -5,14 +5,12 @@ import qs from 'qs';
 import { IoMdBook } from "react-icons/io";
 
 import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
+import { googleBooksURL, MAX_RESULTS } from '../../utilities/GoogleBooksURL';
 import Results from './Results';
 import PageNavigation from './PageNavigation';
 import Recommendations from './Recommendations';
 
 const FIELDS = "&fields=totalItems,items(id,volumeInfo(authors,imageLinks(thumbnail),publisher,title,subtitle))";
-const MAX_RESULTS = 12;
-const GOOGLE_API_KEY = "&key=" + "AIzaSyCiP-gK-4paqp4nt-E8xWZFjTST-2o8E8w";
-const GOOGLE_BOOKS_URL_BASE = `https://www.googleapis.com/books/v1/volumes?maxResults=${MAX_RESULTS}&${FIELDS}`;
 
 const options = {
   intitle: "title",
@@ -58,7 +56,9 @@ class Search extends Component {
       const { currentPage, results, searchString } = this.state;
 
       const searchQuery = searchString.replace(/\s+/g, "+"); // replaces whitespace with "+"
-      const url = GOOGLE_BOOKS_URL_BASE + `&startIndex=${pageNum * MAX_RESULTS}&q=${searchQuery}` + GOOGLE_API_KEY;
+      const url = googleBooksURL({
+        search: `&startIndex=${pageNum * MAX_RESULTS}&q=${searchQuery}&${FIELDS}`
+      });
 
       const googleFetch = results[pageNum];
       await googleFetch.aFetch( url );

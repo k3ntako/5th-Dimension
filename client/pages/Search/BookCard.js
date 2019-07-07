@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import NoImage from '../../components/NoImage';
+
 import styles from './Results.css';
 
 const BookCard = (props) => {

@@ -4,11 +4,11 @@ import { withRouter } from 'react-router-dom';
 import qs from 'qs';
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { MAX_RESULTS } from '../../utilities/GoogleBooksURL';
 import GoogleIcon from './../../components/GoogleIcon';
 
 import styles from './PageNavigation.css';
 
-const MAX_RESULTS = 12;
 
 class PageNavigation extends Component {
 
@@ -53,7 +53,7 @@ class PageNavigation extends Component {
     }
 
     const parsed = this.parseQuery(this.props.location.search.slice(1));
-    if( Math.ceil(this.props.totalItems / MAX_RESULTS) > parsed.p && currentPageBookCount === 12 ){
+    if( Math.ceil(this.props.totalItems / MAX_RESULTS) > parsed.p && currentPageBookCount === MAX_RESULTS ){
       nextButton = <button className={`${styles.button} ${styles.next}`} onClick={this.nextPage}>
         <span>Next</span>
         <IoMdArrowRoundForward size={"1.4rem"} />
