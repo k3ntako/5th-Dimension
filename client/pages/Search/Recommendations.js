@@ -20,7 +20,7 @@ const createFourAM = ( daysFromNow ) => {
   let fourAM = new Date();
   fourAM.setHours(4);
   fourAM.setMinutes(0);
-  fourAM.setDate(fourAM.getDate() + daysFromNow * 24 * 60 * 60 * 1000);
+  fourAM.setDate(fourAM.getDate() + daysFromNow);
   return fourAM;
 }
 

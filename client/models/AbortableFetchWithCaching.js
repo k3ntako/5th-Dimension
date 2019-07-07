@@ -11,12 +11,11 @@ class AbortableFetchWithCaching extends AbortableFetch{
 
       const cachedContent = this.getCache(cacheKey);
 
-      if( cachedContent && cachedContent.cached && cachedContent.cached.expires > Date.now()){
+      if( cachedContent && cachedContent.cached && new Date(cachedContent.cached.expires) > Date.now()){
         this._response = cachedContent;
         this._fetchSucessful = true;
         this._isFetching = false;
       }else{
-
         const FIVE_MINS = Date.now() + 1000 * 60 * 5;
         for( let key in localStorage ){
           if( key.slice(0,6) !== 'aFetch' ){
