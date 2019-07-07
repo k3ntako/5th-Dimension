@@ -47,11 +47,11 @@ class AbortableFetchWithCaching extends AbortableFetch{
   }
 
   setCache(cacheKey, json){
-    if( cacheKey ){
+    if( cacheKey && json ){
       localStorage.setItem("aFetch" + cacheKey, JSON.stringify(json));
-      return true;
+    }else{
+      throw new Error("Invalid cache-key or JSON")
     }
-    return false;
   }
 
   removeExpiredCache(){
@@ -67,7 +67,7 @@ class AbortableFetchWithCaching extends AbortableFetch{
       }
       const content = JSON.parse(localStorage.getItem(key));
       const expires = content && content.cached && new Date(content.cached.expires);
-      if( !expires || !expires.getTime() || !content || expires < FIVE_MINS || TEN_DAYS < expires ){
+      if( !expires || !expires.getTime() || expires < FIVE_MINS || TEN_DAYS < expires ){
         localStorage.removeItem(key);
       }
     }
@@ -77,11 +77,9 @@ class AbortableFetchWithCaching extends AbortableFetch{
     try{
       const darkMode = localStorage.getItem("dark-mode");
       localStorage.clear();
-      localStorage.setItem("dark-mode", darkMode);
-      return true;
+      localStorage.setItem("dark-mode", darkMode || "off");
     }catch( err ){
       console.error(err);
-      return false;;
     }
   }
 
