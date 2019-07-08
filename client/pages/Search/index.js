@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import qs from 'qs';
 import { IoMdBook } from "react-icons/io";
 
 import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
 import { googleBooksURL, MAX_RESULTS } from '../../utilities/GoogleBooksURL';
+import { parseQuery } from '../../utilities/SearchHelper';
 import Results from './Results';
 import PageNavigation from './PageNavigation';
 import Recommendations from './Recommendations';
@@ -25,7 +25,7 @@ class Search extends Component {
   constructor(props){
     super(props);
 
-    const parsed = this.parseQuery(props.location.search.slice(1));
+    const parsed = parseQuery(props.location.search.slice(1));
 
     this.state = {
       searchString: parsed.q,
@@ -102,8 +102,8 @@ class Search extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot){
     try{
-      const parsed = this.parseQuery(this.props.location.search.slice(1));
-      const oldParsed = this.parseQuery(prevProps.location.search.slice(1));
+      const parsed = parseQuery(this.props.location.search.slice(1));
+      const oldParsed = parseQuery(prevProps.location.search.slice(1));
 
       if( parsed.q && (!oldParsed.q || oldParsed.q !== parsed.q) ){
         //Search Term Changed or New Search
@@ -133,12 +133,6 @@ class Search extends Component {
     }
   }
 
-  parseQuery( toParse ){
-    let parsed = qs.parse(toParse);
-    parsed.p = Number(parsed.p) || 0;
-    return parsed;
-  }
-
   componentWillUnmount(){
     for (let pageNum in this.state.results){
       this.state.results[pageNum].abort();
@@ -155,7 +149,7 @@ class Search extends Component {
       </section>
     }
 
-    let books, noResult = false, title;
+    let books, title;
     if( results && results[currentPage] ){
       let query = searchString;
       for( let type in options ){
@@ -165,11 +159,12 @@ class Search extends Component {
       title = `Search for ${query}`;
 
       books = results[currentPage].all;
-      noResult = !fetchingCurrentPage && !books && totalItems !== null; //totalItems === null means it's searching
     }
 
+    const noResults = !fetchingCurrentPage && !books && totalItems !== null; //totalItems === null means it's searching
+
     return <section className="page">
-      <Results books={books} title={title} noResults={noResult} />
+      <Results books={books} title={title} noResults={noResults} />
       <PageNavigation
         totalItems={totalItems}
         currentPage={currentPage}

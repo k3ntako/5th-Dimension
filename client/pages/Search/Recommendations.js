@@ -49,7 +49,7 @@ export default class Recommendations extends Component {
         return null;
       }
 
-      const isbns = nytFetch.response.results.books.map(book => book.isbns[0].isbn13).slice(0,6);
+      const isbns = nytFetch.response.results.books.slice(0,6).map(book => book.isbns[0].isbn13);
 
       const fetchPromises = isbns.map(async (isbn) => {
         try{
