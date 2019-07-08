@@ -55,7 +55,7 @@ describe('<Recommendations>', () => {
       expect(links.at(1).text()).toEqual( bookInfo.title);
 
       const authorAndPublisher = book.find("p");
-      expect(authorAndPublisher.at(0).text()).toEqual("By " + bookInfo.authors.join(", "));
+      expect(authorAndPublisher.at(0).text()).toEqual("By: " + bookInfo.authors.join(", "));
       expect(authorAndPublisher.at(1).text()).toEqual("Publisher: " + bookInfo.publisher);
     });
 

@@ -75,6 +75,7 @@ describe('<BookDetails> component with book info', () => {
     const publishedDateHTML = publishedDate.toLocaleDateString('en-US', options);
 
     const infoMap = [
+      { title: "By", info: "George Washington" },
       { title: "Publisher", info: volumeInfo.publisher },
       { title: "Published", info: publishedDateHTML },
       { title: "Page Count", info: volumeInfo.pageCount + " pages" },
@@ -84,12 +85,12 @@ describe('<BookDetails> component with book info', () => {
       { title: "More at Google Books", info: volumeInfo.previewLink }
     ];
 
-    expect(infoDivs.length).toEqual(7);
+    expect(infoDivs.length).toEqual(8);
     infoDivs.forEach((div, idx) => {
-      if( idx < 6 ){
+      if( idx < 7 ){
         expect(div.find("strong").text()).toEqual(infoMap[idx].title);
         expect(div.text()).toEqual(`${infoMap[idx].title}: ${infoMap[idx].info}`);
-      }else if( idx === 6 ){
+      }else if( idx === 7 ){
         const link = div.find("a");
         expect(link.text()).toEqual(infoMap[idx].title);
         expect(link.prop("href")).toEqual(infoMap[idx].info);

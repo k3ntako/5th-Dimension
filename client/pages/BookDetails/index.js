@@ -6,6 +6,7 @@ import FetchFailed from './FetchFailed';
 import NoImage from '../../components/NoImage';
 import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
 import { googleBooksURL } from '../../utilities/GoogleBooksURL';
+import { parseBookInfo } from '../../utilities/ParseBookInfo';
 
 import styles from './index.css';
 
@@ -73,37 +74,13 @@ export default class BookDetails extends Component {
     const sanitizedDescription = DOMPurify.sanitize(vInfo.description, DOMPurifyOptions);
     const imageLink = vInfo.imageLinks && vInfo.imageLinks.small;
 
-    const identifiers = vInfo.industryIdentifiers && vInfo.industryIdentifiers.map(identifier => {
-      return <div key={identifier.type + identifier.identifier}>
-        <strong>{identifier.type.replace(/\_/g, " ")}</strong>: {identifier.identifier}
-      </div>
-    })
-
-    let publishedDateHTML;
-    const dateExists = vInfo.publishedDate && typeof vInfo.publishedDate === 'string';
-    const validDateFormat = dateExists && /^((\d){4}-(\d){2}-(\d){2})$/.test(vInfo.publishedDate);
-    if( dateExists && validDateFormat ){
-      const dateSplit = vInfo.publishedDate.split("-");
-      const publishedDate = new Date(Date.UTC(dateSplit[0], dateSplit[1], dateSplit[2], 12));
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      publishedDateHTML = <div>
-        <strong>Published</strong>: {publishedDate.toLocaleDateString('en-US', options)}
-      </div>
-    }else if( dateExists && !validDateFormat ){
-      publishedDateHTML = <div>
-        <strong>Published</strong>: { vInfo.publishedDate }
-      </div>
-    }
-
-    let categoryTitle, categories, categoriesHTML;
-    if( vInfo.categories ){
-      categoryTitle = vInfo.categories.length < 2 ? "Category" : "Categories";
-      categories = vInfo.categories.join(", ");
-      categoriesHTML = <div><strong>{categoryTitle}</strong>: {categories}</div>;
-    }
-
     const bookCover = imageLink ? <img className={styles.coverImage} src={imageLink} /> : <NoImage className={styles.coverImage} />;
-    const pageCount = vInfo.pageCount && <div><strong>Page Count</strong>: {vInfo.pageCount} pages</div>;
+
+    const bookInfoHTML = parseBookInfo(vInfo).map(dataPoint => {
+      return <div key={dataPoint.title}>
+        <strong>{ dataPoint.title }</strong>: { dataPoint.info }
+      </div>
+    });
 
     return <section className="page">
       <h2 className={styles.title}>{vInfo.title}</h2>
@@ -111,11 +88,7 @@ export default class BookDetails extends Component {
       <div className={styles.details}>
         { bookCover }
         <div className={styles.info}>
-          <div><strong>Publisher</strong>: {vInfo.publisher}</div>
-          { publishedDateHTML }
-          { pageCount }
-          { identifiers }
-          { categoriesHTML }
+          { bookInfoHTML }
           <div>
             <p>
               <a href={vInfo.previewLink} target="_blank">More at Google Books</a>

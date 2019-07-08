@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import NoImage from '../../components/NoImage';
+import { parseBookInfo } from '../../utilities/ParseBookInfo';
 
 import styles from './Results.css';
 
@@ -11,13 +12,16 @@ const BookCard = (props) => {
     return null;
   }
 
-  const volumeInfo = props.book.volumeInfo;
+  const vInfo = props.book.volumeInfo;
 
-  const imageLink = volumeInfo.imageLinks ? volumeInfo.imageLinks.thumbnail : "";
+  const imageLink = vInfo.imageLinks ? vInfo.imageLinks.thumbnail : "";
   const bookCover = imageLink ? <img src={imageLink} /> : <NoImage className={styles.noImage}/>;
 
-  const authors = volumeInfo.authors && <p>By {volumeInfo.authors.join(", ")}</p>;
-  const publisher = volumeInfo.publisher && <p>Publisher: {volumeInfo.publisher}</p>;
+  const bookInfoHTML = parseBookInfo(vInfo).map(dataPoint => {
+    return <p key={dataPoint.title}>
+      { dataPoint.title }: { dataPoint.info }
+    </p>
+  });
 
   return <div className={styles.resultBox}>
     <div className={styles.coverImage}>
@@ -28,18 +32,17 @@ const BookCard = (props) => {
     <div className={styles.bookInfo}>
       <h5>
         <Link to={`/books/${props.book.id}`}>
-          { volumeInfo.title }
+          { vInfo.title }
         </Link>
       </h5>
-      { volumeInfo.subtitle && <h6>{volumeInfo.subtitle}</h6> }
-      { authors }
-      { publisher }
+      { vInfo.subtitle && <h6>{vInfo.subtitle}</h6> }
+      { bookInfoHTML }
     </div>
   </div>
 }
 
 BookCard.propTypes = {
-  book: PropTypes.shape({
+  book: PropTypes.exact({
     id: PropTypes.string,
     volumeInfo: PropTypes.shape({
       imageLinks: PropTypes.shape({
