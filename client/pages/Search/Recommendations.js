@@ -3,14 +3,14 @@ import GoogleIcon from './../../components/GoogleIcon';
 import Results from './Results';
 import AbortableFetchGoogle from './../../models/AbortableFetchGoogle';
 import AbortableFetchWithCaching from './../../models/AbortableFetchWithCaching';
-import { googleBooksURL, MAX_RESULTS } from '../../utilities/GoogleBooksURL';
+import { googleBooksURL, bookFields, MAX_RESULTS } from '../../utilities/GoogleBooksURL';
 
 import styles from './Recommendations.css';
 
 const NYT_API_KEY = "75CdDT9ccCYUBlFNTOLtYE1AwAMpdEFV";
 const NYT_LINK = `https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=${NYT_API_KEY}`;
 
-const FIELDS = "fields=items(id,volumeInfo(authors,imageLinks(thumbnail),publisher,title,subtitle))";
+const FIELDS = bookFields({ isSearch: true, imageType: "thumbnail" });
 const googleByISBN = (isbn) => googleBooksURL({
   search: `q=ISBN:${isbn}&${FIELDS}`,
   maxResults: 1,

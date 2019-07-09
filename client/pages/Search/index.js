@@ -4,13 +4,13 @@ import { withRouter } from 'react-router-dom';
 import { IoMdBook } from "react-icons/io";
 
 import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
-import { googleBooksURL, MAX_RESULTS } from '../../utilities/GoogleBooksURL';
+import { googleBooksURL, bookFields, MAX_RESULTS } from '../../utilities/GoogleBooksURL';
 import { parseQuery } from '../../utilities/SearchHelper';
 import Results from './Results';
 import PageNavigation from './PageNavigation';
 import Recommendations from './Recommendations';
 
-const FIELDS = "fields=totalItems,items(id,volumeInfo(authors,imageLinks(thumbnail),publisher,title,subtitle))";
+const FIELDS = bookFields({ isSearch: true, imageType: "thumbnail" });
 
 const options = {
   intitle: "title",

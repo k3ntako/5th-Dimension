@@ -5,7 +5,7 @@ import DOMPurify from 'dompurify';
 import FetchFailed from './FetchFailed';
 import NoImage from '../../components/NoImage';
 import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
-import { googleBooksURL } from '../../utilities/GoogleBooksURL';
+import { googleBooksURL, bookFields } from '../../utilities/GoogleBooksURL';
 import { parseBookInfo } from '../../utilities/ParseBookInfo';
 
 import styles from './index.css';
@@ -16,8 +16,8 @@ const DOMPurifyOptions = {
   'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'span', ],
 }
 
-const FIELDS = "fields=volumeInfo(authors,categories,description,industryIdentifiers," +
-  "imageLinks(small),pageCount,previewLink,publishedDate,publisher,title,subtitle)";
+const additionVInfoFields = "categories,description,industryIdentifiers,pageCount,previewLink,publishedDate";
+const FIELDS = bookFields({ imageType: "small", additionVInfoFields });
 
 export default class BookDetails extends Component {
 

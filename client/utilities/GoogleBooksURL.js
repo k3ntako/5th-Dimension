@@ -12,8 +12,20 @@ const googleBooksURL = ({ params, search, maxResults = MAX_RESULTS }) => {
   return url;
 }
 
+const bookFields = ({ imageType = "thumbnail", additionVInfoFields, isSearch }) => {
+  const addFields = additionVInfoFields ? "," + additionVInfoFields : "";
+  let fields = `volumeInfo(authors,imageLinks(${imageType}),publisher,title,subtitle${addFields})`;
+
+  if( isSearch ){
+    fields = `totalItems,items(id,${fields})`;
+  }
+
+  return `fields=${fields}`;
+}
+
 
 module.exports = {
   googleBooksURL,
-  MAX_RESULTS
+  bookFields,
+  MAX_RESULTS,
 }
