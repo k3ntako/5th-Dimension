@@ -9,6 +9,10 @@ html, body{
   color: var(--text-color);
 }
 
+#app{
+  min-height: 75vh;
+}
+
 section.page{
   max-width: 1200px;
   padding: 0 2rem 1rem 2rem;
