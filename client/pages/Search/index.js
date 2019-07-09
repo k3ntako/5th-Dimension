@@ -37,18 +37,41 @@ class Search extends Component {
   }
 
   componentDidMount(){
-    if( this.state.searchString ){
-      this.setUpFetch(this.state.currentPage || 0)
+    this.setUpFetch(this.state.currentPage || 0);
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot){
+    try{
+      const parsed = parseQuery(this.props.location.search.slice(1));
+      const oldParsed = parseQuery(prevProps.location.search.slice(1));
+
+      if( oldParsed.q === parsed.q ){
+        //nothing has changed
+        return;
+      }
+
+      // new search or back to homepage
+      this.setState({
+        searchString: parsed.q || "",
+        results: {},
+        totalItems : null,
+        currentPage: parsed.p || 0,
+      }, () => this.setUpFetch(parsed.p));
+
+    }catch( err ){
+      console.error(err);
     }
   }
 
   setUpFetch( pageNum = 0 ){
-    const newFetch = new AbortableFetchGoogle;
-    const results = Object.assign({}, this.state.results, { [pageNum]: newFetch });
-    this.setState({
-      results,
-      fetchingCurrentPage: pageNum === this.state.currentPage
-    }, () => this.fetchSearch(pageNum));
+    if( this.state.searchString ){
+      const newFetch = new AbortableFetchGoogle;
+      const results = Object.assign({}, this.state.results, { [pageNum]: newFetch });
+      this.setState({
+        results,
+        fetchingCurrentPage: pageNum === this.state.currentPage
+      }, () => this.fetchSearch(pageNum));
+    }
   }
 
   async fetchSearch(pageNum){
@@ -63,20 +86,17 @@ class Search extends Component {
       const googleFetch = results[pageNum];
       await googleFetch.aFetch( url );
 
-      if( googleFetch.fetchSucessful ){
-        this.setState({
-          totalItems: googleFetch.response.totalItems,
-          fetchingCurrentPage: false
-        });
-      }else if( !googleFetch.isFetching && !googleFetch.didAbort ){
-        this.setState({
-          totalItems: 0,
-          fetchingCurrentPage: false
-        });
+      if( googleFetch.didAbort ){
+        return;
       }
 
+      const totalItems = googleFetch.fetchSucessful ? googleFetch.response.totalItems : 0;
+      this.setState({
+        totalItems,
+        fetchingCurrentPage: false
+      });
 
-      if( results[currentPage].response.totalItems && !results[currentPage + 1] && !googleFetch.didAbort ){
+      if( results[currentPage].response.totalItems && !results[currentPage + 1] ){
         this.setUpFetch( currentPage + 1 );
       }
     }catch( err ){
@@ -98,35 +118,6 @@ class Search extends Component {
         this.setUpFetch( pageNum + 1 );
       }
     });
-  }
-
-
-  componentDidUpdate(prevProps, prevState, snapshot){
-    try{
-      const parsed = parseQuery(this.props.location.search.slice(1));
-      const oldParsed = parseQuery(prevProps.location.search.slice(1));
-
-      if( oldParsed.q === parsed.q ){
-        //nothing has changed
-        return null;
-      }
-
-      // new search or back to homepage
-      this.setState({
-        searchString: parsed.q,
-        results: {},
-        totalItems : null,
-        currentPage: parsed.p || 0,
-      }, () => {
-        if( parsed.q ){
-          // new search
-          this.setUpFetch(parsed.p);
-        }
-      });
-
-    }catch( err ){
-      console.error(err);
-    }
   }
 
   componentWillUnmount(){
@@ -155,7 +146,6 @@ class Search extends Component {
       title = `Search for ${query}`;
 
       books = results[currentPage].all;
-
       noResults = results[currentPage].noResults
     }
 
