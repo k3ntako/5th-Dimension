@@ -68,14 +68,15 @@ class Search extends Component {
           totalItems: googleFetch.response.totalItems,
           fetchingCurrentPage: false
         });
-      }else if( !googleFetch.isFetching && !googleFetch.didAbort){
+      }else if( !googleFetch.isFetching && !googleFetch.didAbort ){
         this.setState({
           totalItems: 0,
           fetchingCurrentPage: false
         });
       }
 
-      if( !results[currentPage + 1] && !googleFetch.didAbort ){
+
+      if( results[currentPage].response.totalItems && !results[currentPage + 1] && !googleFetch.didAbort ){
         this.setUpFetch( currentPage + 1 );
       }
     }catch( err ){
@@ -87,7 +88,7 @@ class Search extends Component {
     return !!this.state.results[pageNum];
   }
 
-  onPageChange( pageNum ){
+  onPageChange = ( pageNum ) => {
     this.setState({
       currentPage: pageNum
     }, () => {
@@ -105,29 +106,24 @@ class Search extends Component {
       const parsed = parseQuery(this.props.location.search.slice(1));
       const oldParsed = parseQuery(prevProps.location.search.slice(1));
 
-      if( parsed.q && (!oldParsed.q || oldParsed.q !== parsed.q) ){
-        //Search Term Changed or New Search
-        this.setState({
-          searchString: parsed.q,
-          results: {},
-          totalItems : null,
-          currentPage: parsed.p || 0,
-        }, () => {
-          this.setUpFetch(parsed.p);
-        });
-      }else if( parsed && oldParsed && oldParsed.q === parsed.q && oldParsed.p !== parsed.p ){
-        //Page changed on same search
-        this.setState({ searchString: parsed.q, currentPage: parsed.p });
-        this.onPageChange( parsed.p );
-      }else if( !parsed.q && this.state.searchString ){
-        // Going to homepage but old state is still around
-        this.setState({
-          searchString: "",
-          results: {},
-          totalItems: null,
-          currentPage: 0,
-        });
+      if( oldParsed.q === parsed.q ){
+        //nothing has changed
+        return null;
       }
+
+      // new search or back to homepage
+      this.setState({
+        searchString: parsed.q,
+        results: {},
+        totalItems : null,
+        currentPage: parsed.p || 0,
+      }, () => {
+        if( parsed.q ){
+          // new search
+          this.setUpFetch(parsed.p);
+        }
+      });
+
     }catch( err ){
       console.error(err);
     }
@@ -140,7 +136,7 @@ class Search extends Component {
   }
 
   render(){
-    const { currentPage, fetchingCurrentPage, results, searchString, totalItems } = this.state;
+    const { currentPage, results, searchString, totalItems } = this.state;
 
     // Homepage (user hasn't searched yet)
     if( !searchString ){
@@ -149,7 +145,7 @@ class Search extends Component {
       </section>
     }
 
-    let books, title;
+    let books, title, noResults = false;
     if( results && results[currentPage] ){
       let query = searchString;
       for( let type in options ){
@@ -159,16 +155,17 @@ class Search extends Component {
       title = `Search for ${query}`;
 
       books = results[currentPage].all;
-    }
 
-    const noResults = !fetchingCurrentPage && !books && totalItems !== null; //totalItems === null means it's searching
+      noResults = results[currentPage].noResults
+    }
 
     return <section className="page">
       <Results books={books} title={title} noResults={noResults} />
       <PageNavigation
         totalItems={totalItems}
         currentPage={currentPage}
-        currentPageBookCount={books && books.length} />
+        currentPageBookCount={books && books.length}
+        onPageChange={this.onPageChange} />
     </section>
   }
 }

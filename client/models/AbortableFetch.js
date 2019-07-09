@@ -30,6 +30,11 @@ class AbortableFetch {
     return this._didAbort;
   }
 
+  get noResults(){
+    const fetchFailed = this._fetchSucessful === false || this._didAbort;
+    return fetchFailed || (!this._isFetching && this._response && !this._response.totalItems);
+  }
+
   async aFetch( url ){
     try{
       this._isFetching = true;

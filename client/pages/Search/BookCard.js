@@ -17,7 +17,8 @@ const BookCard = (props) => {
   const imageLink = vInfo.imageLinks ? vInfo.imageLinks.thumbnail : "";
   const bookCover = imageLink ? <img src={imageLink} /> : <NoImage className={styles.noImage}/>;
 
-  const bookInfoHTML = parseBookInfo(vInfo).map(dataPoint => {
+  const parsedVInfo = parseBookInfo(vInfo);
+  const bookInfoHTML = parsedVInfo.map(dataPoint => {
     return <p key={dataPoint.title}>
       { dataPoint.title }: { dataPoint.info }
     </p>

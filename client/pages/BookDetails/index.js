@@ -76,7 +76,8 @@ export default class BookDetails extends Component {
 
     const bookCover = imageLink ? <img className={styles.coverImage} src={imageLink} /> : <NoImage className={styles.coverImage} />;
 
-    const bookInfoHTML = parseBookInfo(vInfo).map(dataPoint => {
+    const parsedVInfo = parseBookInfo(vInfo);
+    const bookInfoHTML = parsedVInfo.map(dataPoint => {
       return <div key={dataPoint.title}>
         <strong>{ dataPoint.title }</strong>: { dataPoint.info }
       </div>

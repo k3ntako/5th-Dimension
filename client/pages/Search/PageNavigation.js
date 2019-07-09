@@ -18,14 +18,18 @@ class PageNavigation extends Component {
 
   nextPage = () => {
     const parsed = parseQuery(this.props.location.search.slice(1));
+    const newCurrentPage = Number(parsed.p) + 1;
 
-    this.props.history.push(`/search?q=${parsed.q}&p=${Number(parsed.p) + 1}`);
+    this.props.onPageChange( newCurrentPage );
+    this.props.history.push(`/search?q=${parsed.q}&p=${newCurrentPage}`);
     window.scroll(0,0); //scroll to top
   }
 
   prevPage = () => {
     const parsed = parseQuery(this.props.location.search.slice(1));
     const newCurrentPage = parsed.p > 0 ? parsed.p - 1 : 0;
+
+    this.props.onPageChange( newCurrentPage );
     this.props.history.push(`/search?q=${parsed.q}&p=${newCurrentPage}`);
     window.scroll(0,0); //scroll to top
   }
