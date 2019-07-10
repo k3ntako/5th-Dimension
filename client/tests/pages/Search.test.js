@@ -1,8 +1,8 @@
-import Search from '../../pages/Search';
+import SearchPage from '../../pages/Search';
 import { MAX_RESULTS } from '../../utilities/GoogleBooksURL';
 
 
-describe('<Search> without search', () => {
+describe('<SearchPage> without search', () => {
   let wrapper;
 
   beforeAll((done) => {
@@ -13,7 +13,7 @@ describe('<Search> without search', () => {
           { pathname: "/search", search: "" },
         ]}
         initialIndex={0} >
-        <Search />
+        <SearchPage />
       </MemoryRouter>
     );
 
@@ -22,10 +22,6 @@ describe('<Search> without search', () => {
     });
   });
 
-  it('should be wrapper in withRouter', (done) => {
-    expect(wrapper.exists("withRouter(Search)")).toEqual(true);
-    done();
-  });
 
   it('should not display recommendations when user has searched', (done) => {
     expect(wrapper.exists('Recommendations')).toEqual(true);
@@ -34,7 +30,7 @@ describe('<Search> without search', () => {
   });
 });
 
-describe('<Search> after user search', () => {
+describe('<SearchPage> after user search', () => {
   let wrapper, items;
 
 
@@ -66,7 +62,7 @@ describe('<Search> after user search', () => {
           { pathname: '/search', search: '?q=Title' },
         ]}
         initialIndex={0} >
-        <Search />
+        <SearchPage />
       </MemoryRouter>
     );
 
@@ -83,18 +79,13 @@ describe('<Search> after user search', () => {
     done();
   })
 
-  it('should be wrapper in withRouter', (done) => {
-    expect(wrapper.exists("withRouter(Search)")).toEqual(true);
-    done();
-  });
-
   it('should not display recommendations when user has searched', (done) => {
     expect(wrapper.exists('Recommendations')).toEqual(false);
     expect(wrapper.exists('PageNavigation')).toEqual(true);
     done();
   });
 
-  it('should display twelve books', (done) => {
+  it('should display twenty-four books', (done) => {
     const results = wrapper.find(".resultBox");
     expect(results.length).toEqual(MAX_RESULTS);
 
@@ -126,9 +117,45 @@ describe('<Search> after user search', () => {
     expect(pageNavigation.exists("IoMdArrowRoundBack")).toEqual(false);
     done();
   });
+
+  it('should navigate to next page and back button should exist', (done) => {
+    // page 1
+    const pageNavigation = wrapper.find("PageNavigation");
+    expect(pageNavigation.prop("currentPage")).toEqual(0);
+
+    // click next button
+    const nextButton = pageNavigation.find("button.next");
+    nextButton.simulate("click");
+    wrapper.update();
+
+    // page 2
+    const nextPageNavigation = wrapper.find("PageNavigation");
+    expect(nextPageNavigation.prop("currentPage")).toEqual(1);
+    expect(nextPageNavigation.exists("IoMdArrowRoundForward")).toEqual(true);
+    expect(nextPageNavigation.exists("IoMdArrowRoundBack")).toEqual(true);
+
+    // click back button
+    const prevButton = nextPageNavigation.find("button.prev");
+    prevButton.simulate("click");
+    wrapper.update();
+
+    // page 1
+    const prevPageNavigation = wrapper.find("PageNavigation");
+    expect(prevPageNavigation.prop("currentPage")).toEqual(0);
+    expect(prevPageNavigation.exists("IoMdArrowRoundForward")).toEqual(true);
+    expect(prevPageNavigation.exists("IoMdArrowRoundBack")).toEqual(false);
+    done();
+  });
+
+  it('should have next page loaded', (done) => {
+    const search = wrapper.find("SearchPage");
+    const searcher = search.state("searcher");
+    expect(Object.keys(searcher.results).length).toEqual(2);
+    done();
+  });
 });
 
-describe('<Search> on second page of search', () => {
+describe('<SearchPage> on second page of search', () => {
   let wrapper, items;
 
   beforeEach((done) => {
@@ -159,7 +186,7 @@ describe('<Search> on second page of search', () => {
           { pathname: '/search', search: '?q=Title&p=1' },
         ]}
         initialIndex={0} >
-        <Search />
+        <SearchPage />
       </MemoryRouter>
     );
 

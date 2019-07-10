@@ -25,7 +25,7 @@ class SearchPage extends Component {
     const parsed = parseQuery(props.location.search.slice(1));
 
     this.state = {
-      Searcher: new Searcher(parsed.q, parsed.p, this.forceUpdate.bind(this)),
+      searcher: new Searcher(parsed.q, parsed.p, this.forceUpdate.bind(this)),
     };
   }
 
@@ -39,7 +39,7 @@ class SearchPage extends Component {
         return;
       }
 
-      this.state.Searcher.onSearchChanged( parsed.q, parsed.p )
+      this.state.searcher.onSearchChanged( parsed.q, parsed.p )
 
     }catch( err ){
       console.error(err);
@@ -47,14 +47,14 @@ class SearchPage extends Component {
   }
 
   componentWillUnmount(){
-    this.state.Searcher.abortAll;
+    this.state.searcher.abortAll;
   }
 
   render(){
-    const searchString  = this.state.Searcher.searchString;
-    const currentPage  = this.state.Searcher.currentPage;
-    const results  = this.state.Searcher.results;
-    const totalItems  = this.state.Searcher.totalItems;
+    const searchString  = this.state.searcher.searchString;
+    const currentPage  = this.state.searcher.currentPage;
+    const results  = this.state.searcher.results;
+    const totalItems  = this.state.searcher.totalItems;
 
     // Homepage (user hasn't searched yet)
     if( !searchString ){
@@ -82,7 +82,7 @@ class SearchPage extends Component {
         totalItems={totalItems}
         currentPage={currentPage}
         currentPageBookCount={books && books.length}
-        onPageChange={this.state.Searcher.onPageChange} />
+        onPageChange={this.state.searcher.onPageChange} />
     </section>
   }
 }

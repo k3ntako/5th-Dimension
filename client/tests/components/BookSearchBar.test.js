@@ -28,7 +28,7 @@ describe('<BookSearchBar>', () => {
     expect(wrapper.find("BookSearchBar").state("search")).toEqual(searchText);
   });
 
-  it('', () => {
+  it('should add hasFocus class name when input has focus', () => {
     expect(input.prop("className")).not.toContain("hasFocus");
     expect(wrapper.find("BookSearchBar").state("hasFocus")).toEqual(false);
 
@@ -59,7 +59,7 @@ describe('<BookSearchBar>', () => {
     expect(wrapper.find("BookSearchBar").state("activeType")).toEqual("intitle");
   });
 
-  it('', () => {
+  it('should alter url according user input', () => {
     const routes = wrapper.find("Router");
     const locationBeforeEnter = routes.prop("history").location;
     expect(locationBeforeEnter.pathname).not.toEqual("/search");

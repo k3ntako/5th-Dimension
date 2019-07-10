@@ -39,7 +39,7 @@ describe('<BookDetails> component with book info', () => {
 
   beforeEach((done) => {
     const match = { params: { id: "SHGJ23FD6" }};
-    fetchMock.get(BOOK_LINK, {
+    fetchMock.get("*", {
       status: 200,
       body: BOOK_RESPONSE
     });

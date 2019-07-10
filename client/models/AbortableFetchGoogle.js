@@ -15,7 +15,7 @@ class AbortableFetchGoogle extends AbortableFetchWithCaching{
     }else if( this._response.volumeInfo ){
       return this._response;
     }else{
-      console.log("Nothing returned:", this._response);
+      console.error("Nothing returned:", this._response);
     }
   }
 

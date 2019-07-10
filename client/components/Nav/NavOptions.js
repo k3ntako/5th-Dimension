@@ -12,34 +12,41 @@ export default class NavOptions extends Component{
     super();
 
     this.state = {
-      DarkMode: new DarkMode,
+      darkMode: new DarkMode,
       isMenuActive: false,
     };
   }
 
   menuToggleDarkMode = () => {
+    this.state.darkMode.toggleDarkMode();
+
     this.setState({
       isMenuActive: false
-    }, this.toggleDarkMode);
+    });
   }
 
   setIsMenuActive = ( isMenuActive ) => {
     this.setState({ isMenuActive });
   }
 
+  toggleDarkMode = () => {
+    this.state.darkMode.toggleDarkMode();
+    this.forceUpdate();
+  }
+
   render(){
-    const { DarkMode, isMenuActive } = this.state;
-    const isDarkModeOn = DarkMode.isDarkModeOn;
+    const { darkMode, isMenuActive } = this.state;
+    const isDarkModeOn = darkMode.isDarkModeOn;
 
     return <>
       <NavOptionsMobile
         isDarkModeOn={isDarkModeOn}
         isMenuActive={isMenuActive}
-        menuToggleDarkMode={DarkMode.toggleDarkMode}
+        menuToggleDarkMode={this.menuToggleDarkMode}
         setIsMenuActive={this.setIsMenuActive} />
       <NavOptionsDesktop
         isDarkModeOn={isDarkModeOn}
-        toggleDarkMode={DarkMode.toggleDarkMode} />
+        toggleDarkMode={this.toggleDarkMode} />
     </>
   }
 }
