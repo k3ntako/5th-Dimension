@@ -69,15 +69,10 @@ describe('<BookDetails> component with book info', () => {
       return node.type() === "div" && !node.prop("className");
     });
 
-    const dateSplit = volumeInfo.publishedDate.split("-");
-    const publishedDate = new Date(Date.UTC(dateSplit[0], dateSplit[1], dateSplit[2], 12));
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    const publishedDateHTML = publishedDate.toLocaleDateString('en-US', options);
-
     const infoMap = [
       { title: "By", info: "George Washington" },
       { title: "Publisher", info: volumeInfo.publisher },
-      { title: "Published", info: publishedDateHTML },
+      { title: "Published", info: "February 22, 1798" },
       { title: "Page Count", info: volumeInfo.pageCount + " pages" },
       { title: "ISBN 10", info: volumeInfo.industryIdentifiers[0].identifier },
       { title: "ISBN 13", info: volumeInfo.industryIdentifiers[1].identifier },

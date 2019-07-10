@@ -47,7 +47,7 @@ const parseDate = ( vInfoDate ) => {
 
   if( vInfoDate && validDateFormat ){
     const dateSplit = vInfoDate.split("-");
-    const publishedDate = new Date(Date.UTC(dateSplit[0], dateSplit[1], dateSplit[2], 12));
+    const publishedDate = new Date(Date.UTC(dateSplit[0], Number(dateSplit[1] - 1), dateSplit[2], 12));
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
     return {
