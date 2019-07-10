@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import NavOptionsDesktop from './NavOptionsDesktop';
 import NavOptionsMobile from './NavOptionsMobile';
+import DarkMode from '../../models/DarkMode';
 
 import styles from './index.css';
 
@@ -11,29 +12,9 @@ export default class NavOptions extends Component{
     super();
 
     this.state = {
-      isDarkModeOn: false,
+      DarkMode: new DarkMode,
       isMenuActive: false,
     };
-  }
-
-  componentDidMount(){
-    const darkModeStatus = localStorage.getItem('dark-mode');
-    this.setState({
-      isDarkModeOn: darkModeStatus === "on"
-    });
-
-    document.getElementsByTagName("body")[0].setAttribute("dark-mode", darkModeStatus);
-  }
-
-  toggleDarkMode = () => {
-    const darkModeStatus = this.state.isDarkModeOn ? "off" : "on";
-    document.getElementsByTagName("body")[0].setAttribute("dark-mode", darkModeStatus);
-    localStorage.setItem('dark-mode', darkModeStatus);
-    this.setState( state => {
-      return {
-        isDarkModeOn: !state.isDarkModeOn
-      }
-    });
   }
 
   menuToggleDarkMode = () => {
@@ -47,17 +28,18 @@ export default class NavOptions extends Component{
   }
 
   render(){
-    const { isDarkModeOn, isMenuActive } = this.state;
+    const { DarkMode, isMenuActive } = this.state;
+    const isDarkModeOn = DarkMode.isDarkModeOn;
 
     return <>
       <NavOptionsMobile
         isDarkModeOn={isDarkModeOn}
         isMenuActive={isMenuActive}
-        menuToggleDarkMode={this.menuToggleDarkMode}
+        menuToggleDarkMode={DarkMode.toggleDarkMode}
         setIsMenuActive={this.setIsMenuActive} />
       <NavOptionsDesktop
         isDarkModeOn={isDarkModeOn}
-        toggleDarkMode={this.toggleDarkMode} />
+        toggleDarkMode={DarkMode.toggleDarkMode} />
     </>
   }
 }
