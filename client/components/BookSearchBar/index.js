@@ -103,4 +103,4 @@ BookSearchBar.propTypes = {
   }),
 }
 
-export default withRouter(BookSearchBar);
+export default BookSearchBar
