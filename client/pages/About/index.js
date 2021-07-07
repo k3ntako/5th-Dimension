@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './index.css';
 
 const GOOGLE_BOOKS_API_LINK = <a href="https://developers.google.com/books/docs/overview" target="_blank">
   Google Books API Family
@@ -37,7 +36,7 @@ export default (props) => {
     <p>
       In the movie, the bookshelf is the key to saving humanity. I chose the
       name to emphasize the importance of books has played in society, especially
-      in a world where we other types of media.
+      in a world where we are consumed by other types of media.
     </p>
     <h4>Developer</h4>
     <p>

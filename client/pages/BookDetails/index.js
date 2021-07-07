@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
-import styles from './index.css';
+import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 
 import FetchFailed from './FetchFailed';
 import NoImage from '../../components/NoImage';
 import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
+import { googleBooksURL, bookFields } from '../../utilities/GoogleBooksURL';
+import { parseBookInfo } from '../../utilities/ParseBookInfo';
+
+import styles from './index.css';
 
 const DOMPurifyOptions = {
   ALLOWED_TAGS: [ 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'ul', 'ol', 'li',
@@ -12,8 +16,8 @@ const DOMPurifyOptions = {
   'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'span', ],
 }
 
-const FIELDS = "fields=volumeInfo(authors,categories,description,industryIdentifiers," +
-  "imageLinks(small),pageCount,previewLink,publishedDate,publisher,title,subtitle)";
+const additionVInfoFields = "categories,description,industryIdentifiers,pageCount,previewLink,publishedDate";
+const FIELDS = bookFields({ imageType: "small", additionVInfoFields });
 
 export default class BookDetails extends Component {
 
@@ -31,7 +35,11 @@ export default class BookDetails extends Component {
   async componentDidMount(){
     try{
       this.fetch = new AbortableFetchGoogle;
-      const link = `https://www.googleapis.com/books/v1/volumes/${this.props.match.params.id}?${FIELDS}`;
+      const link = googleBooksURL({
+        params: this.props.match.params.id,
+        search: FIELDS
+      });
+
       await this.fetch.aFetch( link );
 
       if( this.fetch.fetchSucessful ){
@@ -66,30 +74,14 @@ export default class BookDetails extends Component {
     const sanitizedDescription = DOMPurify.sanitize(vInfo.description, DOMPurifyOptions);
     const imageLink = vInfo.imageLinks && vInfo.imageLinks.small;
 
-    const identifiers = vInfo.industryIdentifiers && vInfo.industryIdentifiers.map(identifier => {
-      return <div key={identifier.type + identifier.identifier}>
-        <strong>{identifier.type.replace(/\_/g, " ")}</strong>: {identifier.identifier}
-      </div>
-    })
-
-    let publishedDateHTML;
-    if( vInfo.publishedDate && typeof vInfo.publishedDate === 'string' ){
-      const dateSplit = vInfo.publishedDate.split("-")
-      const publishedDate = new Date(Date.UTC(dateSplit[0], dateSplit[1], [2], 12));
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      publishedDateHTML = <div>
-        <strong>Published</strong>: {publishedDate.toLocaleDateString('en-US', options)}
-      </div>
-    }
-
-    let categoryTitle, categories, categoriesHTML;
-    if( vInfo.categories ){
-      categoryTitle = vInfo.categories.length < 2 ? "Category" : "Categories";
-      categories = vInfo.categories.join(", ");
-      categoriesHTML = <div><strong>{categoryTitle}</strong>: {categories}</div>;
-    }
-
     const bookCover = imageLink ? <img className={styles.coverImage} src={imageLink} /> : <NoImage className={styles.coverImage} />;
+
+    const parsedVInfo = parseBookInfo(vInfo);
+    const bookInfoHTML = parsedVInfo.map(dataPoint => {
+      return <div key={dataPoint.title}>
+        <strong>{ dataPoint.title }</strong>: { dataPoint.info }
+      </div>
+    });
 
     return <section className="page">
       <h2 className={styles.title}>{vInfo.title}</h2>
@@ -97,11 +89,7 @@ export default class BookDetails extends Component {
       <div className={styles.details}>
         { bookCover }
         <div className={styles.info}>
-          <div><strong>Publisher</strong>: {vInfo.publisher}</div>
-          { publishedDateHTML }
-          <div><strong>Page Count</strong>: {vInfo.pageCount} pages</div>
-          { identifiers }
-          { categoriesHTML }
+          { bookInfoHTML }
           <div>
             <p>
               <a href={vInfo.previewLink} target="_blank">More at Google Books</a>
@@ -114,4 +102,12 @@ export default class BookDetails extends Component {
       </div>
     </section>
   }
+}
+
+BookDetails.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }),
+  }),
 }

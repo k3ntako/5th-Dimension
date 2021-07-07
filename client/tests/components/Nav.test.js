@@ -13,10 +13,10 @@ describe('<Nav>', () => {
 
   it('should have two website titles (desktop and mobile)', () => {
     const titleAndSearch = wrapper.find(".titleAndSearch");
-    const Link = titleAndSearch.find("Link");
-    expect(Link.prop("to")).toEqual("/search");
+    const link = titleAndSearch.find("Link");
+    expect(link.prop("to")).toEqual("/search");
 
-    const websiteTitles = Link.find("h3");
+    const websiteTitles = link.find("h3");
     expect(websiteTitles.at(0).hasClass("mobile")).toEqual(true);
     expect(websiteTitles.at(0).text()).toEqual("5D");
     expect(websiteTitles.at(1).hasClass("desktop")).toEqual(true);
@@ -44,8 +44,6 @@ describe('<Nav>', () => {
 
     const toggleDarkMode = menuItems.find("a").at(1);
     expect(toggleDarkMode.text()).toEqual("Turn On Dark Mode");
-    expect(toggleDarkMode.prop("onClick")).toBeDefined();
-    expect(toggleDarkMode.prop("href")).not.toBeDefined();
   });
 
   it('should contain buttons for desktop', () => {
@@ -60,12 +58,12 @@ describe('<Nav>', () => {
 
     settings.find("FaSun").simulate("click");
     const updatedSettings = wrapper.find(".settings");
-    expect(updatedSettings.exists("FaSun")).toEqual(false);
+    expect(updatedSettings.exists("FaSun")).toEqual(false); //
     expect(updatedSettings.exists("FaMoon")).toEqual(true);
 
     const info = navButtons.find(".info");
-    const Link = info.find("Link");
-    expect(Link.prop("to")).toEqual("/about");
-    expect(Link.exists("MdInfo")).toEqual(true);
+    const link = info.find("Link");
+    expect(link.prop("to")).toEqual("/about");
+    expect(link.exists("MdInfo")).toEqual(true);
   });
 });

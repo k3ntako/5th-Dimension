@@ -1,17 +1,13 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import qs from 'qs';
 import { IoMdBook } from "react-icons/io";
 
-import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
+import { parseQuery } from '../../utilities/SearchHelper';
 import Results from './Results';
 import PageNavigation from './PageNavigation';
 import Recommendations from './Recommendations';
-
-const FIELDS = "&fields=totalItems,items(id,volumeInfo(authors,imageLinks(thumbnail),publisher,title,subtitle))";
-const MAX_RESULTS = 12;
-const GOOGLE_API_KEY = "&key=" + "AIzaSyCiP-gK-4paqp4nt-E8xWZFjTST-2o8E8w";
-const GOOGLE_BOOKS_URL_BASE = `https://www.googleapis.com/books/v1/volumes?maxResults=${MAX_RESULTS}&${FIELDS}`;
+import Searcher from '../../models/Searcher';
 
 const options = {
   intitle: "title",
@@ -21,131 +17,44 @@ const options = {
   isbn: "ISBN",
 }
 
-class Search extends Component {
+class SearchPage extends Component {
 
   constructor(props){
     super(props);
 
-    const parsed = this.parseQuery(props.location.search.slice(1));
+    const parsed = parseQuery(props.location.search.slice(1));
 
     this.state = {
-      searchString: parsed.q,
-      currentPage: parsed.p,
-      results: {},
-      totalItems : null,
-      fetchingCurrentPage: true,
+      searcher: new Searcher(parsed.q, parsed.p, this.forceUpdate.bind(this)),
     };
   }
 
-  componentDidMount(){
-    if( this.state.searchString ){
-      this.setUpFetch(this.state.currentPage || 0)
-    }
-  }
-
-  setUpFetch( pageNum = 0 ){
-    const newFetch = new AbortableFetchGoogle;
-    const results = Object.assign({}, this.state.results, { [pageNum]: newFetch });
-    this.setState({
-      results,
-      fetchingCurrentPage: pageNum === this.state.currentPage
-    }, () => this.fetchSearch(pageNum));
-  }
-
-  async fetchSearch(pageNum){
-    try{
-      const { currentPage, results, searchString } = this.state;
-
-      const searchQuery = searchString.replace(/\s+/g, "+"); // replaces whitespace with "+"
-      const url = GOOGLE_BOOKS_URL_BASE + `&startIndex=${pageNum * MAX_RESULTS}&q=${searchQuery}` + GOOGLE_API_KEY;
-
-      const googleFetch = results[pageNum];
-      await googleFetch.aFetch( url );
-
-      if( googleFetch.fetchSucessful ){
-        this.setState({
-          totalItems: googleFetch.response.totalItems,
-          fetchingCurrentPage: false
-        });
-      }else if( !googleFetch.isFetching && !googleFetch.didAbort){
-        this.setState({
-          totalItems: 0,
-          fetchingCurrentPage: false
-        });
-      }
-
-      if( !results[currentPage + 1] && !googleFetch.didAbort ){
-        this.setUpFetch( currentPage + 1 );
-      }
-    }catch( err ){
-      console.error(err);
-    }
-  }
-
-  alreadyFetched( pageNum ){
-    return !!this.state.results[pageNum];
-  }
-
-  onPageChange( pageNum ){
-    this.setState({
-      currentPage: pageNum
-    }, () => {
-      if( !this.alreadyFetched(pageNum) ){
-        this.setUpFetch( pageNum );
-      }else if(!this.alreadyFetched(pageNum + 1)){
-        this.setUpFetch( pageNum + 1 );
-      }
-    });
-  }
-
-
   componentDidUpdate(prevProps, prevState, snapshot){
     try{
-      const parsed = this.parseQuery(this.props.location.search.slice(1));
-      const oldParsed = this.parseQuery(prevProps.location.search.slice(1));
+      const parsed = parseQuery(this.props.location.search.slice(1));
+      const oldParsed = parseQuery(prevProps.location.search.slice(1));
 
-      if( parsed.q && (!oldParsed.q || oldParsed.q !== parsed.q) ){
-        //Search Term Changed or New Search
-        this.setState({
-          searchString: parsed.q,
-          results: {},
-          totalItems : null,
-          currentPage: parsed.p || 0,
-        }, () => {
-          this.setUpFetch(parsed.p);
-        });
-      }else if( parsed && oldParsed && oldParsed.q === parsed.q && oldParsed.p !== parsed.p ){
-        //Page changed on same search
-        this.setState({ searchString: parsed.q, currentPage: parsed.p });
-        this.onPageChange( parsed.p );
-      }else if( !parsed.q && this.state.searchString ){
-        // Going to homepage but old state is still around
-        this.setState({
-          searchString: "",
-          results: {},
-          totalItems: null,
-          currentPage: 0,
-        });
+      if( oldParsed.q === parsed.q ){
+        //nothing has changed
+        return;
       }
+
+      this.state.searcher.onSearchChanged( parsed.q, parsed.p )
+
     }catch( err ){
       console.error(err);
     }
-  }
-
-  parseQuery( toParse ){
-    let parsed = qs.parse(toParse);
-    parsed.p = Number(parsed.p) || 0;
-    return parsed;
   }
 
   componentWillUnmount(){
-    for (let pageNum in this.state.results){
-      this.state.results[pageNum].abort();
-    }
+    this.state.searcher.abortAll;
   }
 
   render(){
-    const { currentPage, fetchingCurrentPage, results, searchString, totalItems } = this.state;
+    const searchString  = this.state.searcher.searchString;
+    const currentPage  = this.state.searcher.currentPage;
+    const results  = this.state.searcher.results;
+    const totalItems  = this.state.searcher.totalItems;
 
     // Homepage (user hasn't searched yet)
     if( !searchString ){
@@ -154,7 +63,7 @@ class Search extends Component {
       </section>
     }
 
-    let books, noResult, title;
+    let books, title, noResults = false;
     if( results && results[currentPage] ){
       let query = searchString;
       for( let type in options ){
@@ -164,17 +73,24 @@ class Search extends Component {
       title = `Search for ${query}`;
 
       books = results[currentPage].all;
-      noResult = !fetchingCurrentPage && !books && totalItems !== null; //totalItems === null means it's searching
+      noResults = results[currentPage].noResults;
     }
 
     return <section className="page">
-      <Results books={books} title={title} noResults={noResult} />
+      <Results books={books} title={title} noResults={noResults} />
       <PageNavigation
         totalItems={totalItems}
         currentPage={currentPage}
-        currentPageBookCount={books && books.length} />
+        currentPageBookCount={books && books.length}
+        onPageChange={this.state.searcher.onPageChange} />
     </section>
   }
 }
 
-export default withRouter(Search);
+SearchPage.propTypes = {
+  location: PropTypes.shape({
+    search: PropTypes.string,
+  }),
+}
+
+export default withRouter(SearchPage);

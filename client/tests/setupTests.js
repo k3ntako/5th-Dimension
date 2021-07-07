@@ -9,6 +9,7 @@ const { mount, render, shallow } = require('enzyme');
 
 configure({ adapter: new Adapter() });
 
+window.scroll = () => {};
 
 Object.assign(global, {
   React,

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { IoMdBook } from "react-icons/io";
 import styles from './index.css';
@@ -89,12 +90,17 @@ class BookSearchBar extends Component {
         className={`${styles.searchBar} ${hasTextClassName} ${hasFocusClassName}`}
         value={search}
         onChange={this.onSearchChange}
-        onFocus={() => this.setState({ hasFocus: true})}
+        onFocus={() => this.setState({ hasFocus: true })}
         onKeyPress={this.listenForEnter} />
       <div className={`${styles.typeButtons} ${hasFocusClassName}`}>{ buttons }</div>
     </div>
   }
 }
 
+BookSearchBar.propTypes = {
+  history: PropTypes.shape({ //not exact (allows extra properties)
+    push: PropTypes.func.isRequired,
+  }),
+}
 
-export default withRouter(BookSearchBar);
+export default BookSearchBar

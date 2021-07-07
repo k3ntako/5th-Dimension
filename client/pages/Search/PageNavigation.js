@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import qs from 'qs';
 import { IoMdArrowRoundForward } from "react-icons/io";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { MAX_RESULTS } from '../../utilities/GoogleBooksURL';
+import { parseQuery } from '../../utilities/SearchHelper';
 import GoogleIcon from './../../components/GoogleIcon';
 
 import styles from './PageNavigation.css';
 
-const MAX_RESULTS = 12;
 
 class PageNavigation extends Component {
 
@@ -16,23 +17,21 @@ class PageNavigation extends Component {
   }
 
   nextPage = () => {
-    const parsed = this.parseQuery(this.props.location.search.slice(1));
+    const parsed = parseQuery(this.props.location.search.slice(1));
+    const newCurrentPage = Number(parsed.p) + 1;
 
-    this.props.history.push(`/search?q=${parsed.q}&p=${Number(parsed.p) + 1}`);
-    window.scroll(0,0)
+    this.props.onPageChange( newCurrentPage );
+    this.props.history.push(`/search?q=${parsed.q}&p=${newCurrentPage}`);
+    window.scroll(0,0); //scroll to top
   }
 
   prevPage = () => {
-    const parsed = this.parseQuery(this.props.location.search.slice(1));
+    const parsed = parseQuery(this.props.location.search.slice(1));
     const newCurrentPage = parsed.p > 0 ? parsed.p - 1 : 0;
-    this.props.history.push(`/search?q=${parsed.q}&p=${newCurrentPage}`);
-    window.scroll(0,0)
-  }
 
-  parseQuery( toParse ){
-    let parsed = qs.parse(toParse);
-    parsed.p = Number(parsed.p) || 0;
-    return parsed;
+    this.props.onPageChange( newCurrentPage );
+    this.props.history.push(`/search?q=${parsed.q}&p=${newCurrentPage}`);
+    window.scroll(0,0); //scroll to top
   }
 
   render(){
@@ -51,8 +50,8 @@ class PageNavigation extends Component {
       </button>;
     }
 
-    const parsed = this.parseQuery(this.props.location.search.slice(1));
-    if( Math.ceil(this.props.totalItems / MAX_RESULTS) > parsed.p && currentPageBookCount === 12 ){
+    const parsed = parseQuery(this.props.location.search.slice(1));
+    if( Math.ceil(this.props.totalItems / MAX_RESULTS) > parsed.p && currentPageBookCount === MAX_RESULTS ){
       nextButton = <button className={`${styles.button} ${styles.next}`} onClick={this.nextPage}>
         <span>Next</span>
         <IoMdArrowRoundForward size={"1.4rem"} />
@@ -66,6 +65,18 @@ class PageNavigation extends Component {
     </div>
   }
 
+}
+
+PageNavigation.propTypes = {
+  totalItems: PropTypes.number,
+  currentPageBookCount: PropTypes.number,
+  currentPage: PropTypes.number,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }),
+  location: PropTypes.shape({
+    search: PropTypes.string.isRequired,
+  }),
 }
 
 export default withRouter(PageNavigation);

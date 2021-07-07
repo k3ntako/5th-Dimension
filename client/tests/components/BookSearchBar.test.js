@@ -1,7 +1,8 @@
 import BookSearchBar from '../../components/BookSearchBar';
 
 describe('<BookSearchBar>', () => {
-  let wrapper, bookSearchBar;
+  let wrapper, input;
+  const searchText = "Grace Hopper";
 
   beforeAll(() => {
     wrapper = mount(
@@ -9,17 +10,32 @@ describe('<BookSearchBar>', () => {
         <BookSearchBar />
       </MemoryRouter>
     );
+
+    input = wrapper.find("input");
   });
 
-  it('should be wrapper in withRouter', () => {
-    expect(wrapper.exists("withRouter(BookSearchBar)")).toEqual(true);
+  it('input should update its value and state on change', () => {
+    expect(input.update().prop("value")).toBeFalsy();
+    expect(input.prop("className")).not.toContain("hasText");
+
+    input.simulate('change', {
+      target: { value: searchText }
+    });
+
+    const updatedInput = wrapper.update().find("input");
+    expect(updatedInput.prop("value")).toEqual(searchText);
+    expect(updatedInput.prop("className")).toContain("hasText");
+    expect(wrapper.find("BookSearchBar").state("search")).toEqual(searchText);
   });
 
-  it('should have event handlers', () => {
-    const input = wrapper.find("input");
-    expect(input.prop("onChange")).toBeDefined();
-    expect(input.prop("onFocus")).toBeDefined();
-    expect(input.prop("onKeyPress")).toBeDefined();
+  it('should add hasFocus class name when input has focus', () => {
+    expect(input.prop("className")).not.toContain("hasFocus");
+    expect(wrapper.find("BookSearchBar").state("hasFocus")).toEqual(false);
+
+    input.simulate('focus');
+    const updatedInput = wrapper.update().find("input");
+    expect(updatedInput.prop("className")).toContain("hasFocus");
+    expect(wrapper.find("BookSearchBar").state("hasFocus")).toEqual(true);
   });
 
   it('should display all the search buttons', () => {
@@ -41,5 +57,21 @@ describe('<BookSearchBar>', () => {
     const buttons = wrapper.find(".typeButtons").find("button");
     buttons.at(1).simulate('click'); // Title button
     expect(wrapper.find("BookSearchBar").state("activeType")).toEqual("intitle");
-  })
+  });
+
+  it('should alter url according user input', () => {
+    const routes = wrapper.find("Router");
+    const locationBeforeEnter = routes.prop("history").location;
+    expect(locationBeforeEnter.pathname).not.toEqual("/search");
+    expect(locationBeforeEnter.search).toEqual("");
+
+    input.simulate("keypress", { key: "Enter" });
+    expect(wrapper.find("BookSearchBar").state("hasFocus")).toEqual(false);
+
+    const updatedRoutes = wrapper.update().find("Router");
+    const locationAfterEnter = updatedRoutes.prop("history").location;
+    expect(locationAfterEnter.pathname).toEqual("/search");
+    expect(locationAfterEnter.search).toContain(`q=intitle:${searchText.split(" ").join("+")}`);
+    expect(locationAfterEnter.search).toContain("p=0");
+  });
 });

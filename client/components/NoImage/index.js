@@ -1,8 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import styles from './index.css';
 
-export default (props) => {
+const NoImage = (props) => {
   return <div className={`${styles.noImage} ${props.className || ""}`}>
     <span>No Image</span>
   </div>
 }
+
+NoImage.propTypes = {
+  className: PropTypes.string,
+}
+
+export default NoImage;

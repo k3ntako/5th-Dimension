@@ -1,11 +1,16 @@
 import BookDetails from '../../pages/BookDetails';
 import AbortableFetchGoogle from '../../models/AbortableFetchGoogle';
+import { googleBooksURL } from '../../utilities/GoogleBooksURL';
 
 const descriptionTitle = "The Year 2000";
 const descriptionOne = "This is a book about what I think the year 2000 will look like. I promise there will be flying horses.";
 const descriptionTwo = "I think you will enjoy this one!";
 
-const BOOK_LINK = "https://www.googleapis.com/books/v1/volumes/SHGJ23FD6?fields=volumeInfo(authors,categories,description,industryIdentifiers,imageLinks(small),pageCount,previewLink,publishedDate,publisher,title,subtitle)"
+const BOOK_LINK = googleBooksURL({
+  params: "SHGJ23FD6",
+  search: "fields=volumeInfo(authors,categories,description,industryIdentifiers,imageLinks(small),pageCount,previewLink,publishedDate,publisher,title,subtitle)"
+});
+
 const BOOK_RESPONSE = {
   volumeInfo: {
     authors: ["George Washington"],
@@ -34,7 +39,7 @@ describe('<BookDetails> component with book info', () => {
 
   beforeEach((done) => {
     const match = { params: { id: "SHGJ23FD6" }};
-    fetchMock.get(BOOK_LINK, {
+    fetchMock.get("*", {
       status: 200,
       body: BOOK_RESPONSE
     });
@@ -64,14 +69,10 @@ describe('<BookDetails> component with book info', () => {
       return node.type() === "div" && !node.prop("className");
     });
 
-    const dateSplit = volumeInfo.publishedDate.split("-")
-    const publishedDate = new Date(Date.UTC(dateSplit[0], dateSplit[1], [2], 12));
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    const publishedDateHTML = publishedDate.toLocaleDateString('en-US', options);
-
     const infoMap = [
+      { title: "By", info: "George Washington" },
       { title: "Publisher", info: volumeInfo.publisher },
-      { title: "Published", info: publishedDateHTML },
+      { title: "Published", info: "February 22, 1798" },
       { title: "Page Count", info: volumeInfo.pageCount + " pages" },
       { title: "ISBN 10", info: volumeInfo.industryIdentifiers[0].identifier },
       { title: "ISBN 13", info: volumeInfo.industryIdentifiers[1].identifier },
@@ -79,12 +80,12 @@ describe('<BookDetails> component with book info', () => {
       { title: "More at Google Books", info: volumeInfo.previewLink }
     ];
 
-    expect(infoDivs.length).toEqual(7);
+    expect(infoDivs.length).toEqual(8);
     infoDivs.forEach((div, idx) => {
-      if( idx < 6 ){
+      if( idx < 7 ){
         expect(div.find("strong").text()).toEqual(infoMap[idx].title);
         expect(div.text()).toEqual(`${infoMap[idx].title}: ${infoMap[idx].info}`);
-      }else if( idx === 6){
+      }else if( idx === 7 ){
         const link = div.find("a");
         expect(link.text()).toEqual(infoMap[idx].title);
         expect(link.prop("href")).toEqual(infoMap[idx].info);

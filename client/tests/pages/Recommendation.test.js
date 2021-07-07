@@ -15,7 +15,7 @@ describe('<Recommendations>', () => {
     bestSellers = [];
     for(let i = 0; i < 6; i++){
       bestSellers.push({
-        id: i,
+        id: String(i),
         volumeInfo: {
           authors: ["Author" + i],
           imageLinks: { thumbnail: "http://www.example.com/image/" + i },
@@ -55,7 +55,7 @@ describe('<Recommendations>', () => {
       expect(links.at(1).text()).toEqual( bookInfo.title);
 
       const authorAndPublisher = book.find("p");
-      expect(authorAndPublisher.at(0).text()).toEqual("By " + bookInfo.authors.join(", "));
+      expect(authorAndPublisher.at(0).text()).toEqual("By: " + bookInfo.authors.join(", "));
       expect(authorAndPublisher.at(1).text()).toEqual("Publisher: " + bookInfo.publisher);
     });
 
